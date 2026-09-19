@@ -27,8 +27,9 @@ html = tpl.replace("/*__BANK__*/", bank)
 def for_course_folder(page):
     """העותק שיושב בתיקיית הקורס נמצא רמה אחת מעל scm-quiz, ושם
     לדף הנוסחאות יש שם אחר. בלי ההחלפה הזו הקישור אליו שבור."""
-    return page.replace('href="נוסחאות.html"',
-                        'href="דף נוסחאות - ניהול שרשרת ההספקה.html"')
+    return (page.replace('href="נוסחאות.html"',
+                         'href="דף נוסחאות - ניהול שרשרת ההספקה.html"')
+                .replace('href="podcast/index.html"', 'href="scm-quiz/podcast/index.html"'))
 
 for i, t in enumerate(TARGETS):
     page = html if i == 0 else for_course_folder(html)
@@ -39,7 +40,10 @@ for i, t in enumerate(TARGETS):
 FORMULAS = os.path.join(REPO, "נוסחאות.html")
 if os.path.exists(FORMULAS):
     dst = os.path.join(COURSE, "דף נוסחאות - ניהול שרשרת ההספקה.html")
-    open(dst, "w", encoding="utf-8").write(open(FORMULAS, encoding="utf-8").read())
+    sheet = open(FORMULAS, encoding="utf-8").read()
+    sheet = (sheet.replace('href="index.html"', 'href="בוחן תרגול - ניהול שרשרת ההספקה.html"')
+                  .replace('href="podcast/index.html"', 'href="scm-quiz/podcast/index.html"'))
+    open(dst, "w", encoding="utf-8").write(sheet)
     print("נכתב:", dst)
 print("גודל: %.0f KB" % (len(html) / 1024))
 

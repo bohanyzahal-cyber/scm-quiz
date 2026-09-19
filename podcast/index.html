@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>פודקאסט — ניהול שרשרת ההספקה</title>
+<script>try{var t=localStorage.getItem('scmq_theme');if(t)document.documentElement.className=t;}catch(e){}</script>
+<style>
+:root{--bg:#f5f7f6;--surface:#fff;--surface2:#eef2f1;--text:#1c2321;--muted:#66706d;--border:#dfe5e3;--accent:#1f6f8b;--accentSoft:#e3f0f5;--onAccent:#fff;}
+@media (prefers-color-scheme:dark){:root{--bg:#181c1b;--surface:#212625;--surface2:#2b3130;--text:#e9ecea;--muted:#9ea7a4;--border:#333b39;--accent:#6fb7d3;--accentSoft:#1c3441;--onAccent:#0b1f1c;}}
+html.dark{--bg:#181c1b;--surface:#212625;--surface2:#2b3130;--text:#e9ecea;--muted:#9ea7a4;--border:#333b39;--accent:#6fb7d3;--accentSoft:#1c3441;--onAccent:#0b1f1c;}
+html.light{--bg:#f5f7f6;--surface:#fff;--surface2:#eef2f1;--text:#1c2321;--muted:#66706d;--border:#dfe5e3;--accent:#1f6f8b;--accentSoft:#e3f0f5;--onAccent:#fff;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Segoe UI',Arial,sans-serif;line-height:1.6;}
+.wrap{max-width:760px;margin:0 auto;padding:22px 16px 60px;}
+.top{display:flex;align-items:flex-start;gap:12px;}
+.top div{flex:1;min-width:0;}
+h1{font-size:23px;margin:0 0 4px;font-weight:650;}
+.sub{color:var(--muted);font-size:14px;margin:0 0 4px;}
+.tot{color:var(--muted);font-size:13px;margin:0 0 16px;}
+.iconbtn{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:7px 11px;font:inherit;font-size:14px;cursor:pointer;flex:none;}
+.nav{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px;}
+.nav a{flex:1 1 240px;display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:9px 14px;color:var(--text);text-decoration:none;font-size:13.5px;}
+.nav a:hover{border-color:var(--accent);}
+.nav b{font-weight:650;}
+.nav em{font-style:normal;color:var(--muted);}
+.speed{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:0 0 14px;color:var(--muted);font-size:13.5px;}
+.speed button{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:999px;padding:4px 12px;font:inherit;font-size:13px;cursor:pointer;}
+.speed button.on{background:var(--accent);border-color:var(--accent);color:var(--onAccent);}
+.ep{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:12px;}
+.hd{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;}
+.num{background:var(--accent);color:var(--onAccent);border-radius:6px;padding:1px 8px;font-size:13px;font-weight:700;flex:none;}
+.ttl{font-weight:600;flex:1;min-width:0;}
+.dur{color:var(--muted);font-size:13px;flex:none;font-variant-numeric:tabular-nums;}
+audio{width:100%;height:40px;display:block;}
+.row{display:flex;justify-content:flex-start;gap:12px;margin-top:8px;font-size:13px;color:var(--muted);}
+.row a{color:var(--accent);text-decoration:none;}
+.row a:hover{text-decoration:underline;}
+.soon{background:transparent;border-style:dashed;padding:10px 16px;}
+.soon .hd{margin:0;}
+.soon .num{background:var(--surface2);color:var(--muted);}
+.soon .ttl{font-weight:400;color:var(--muted);}
+.note{color:var(--muted);font-size:13px;margin-top:24px;border-top:1px solid var(--border);padding-top:14px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><div>
+<h1>פודקאסט — ניהול שרשרת ההספקה</h1>
+<p class="sub">פרק לכל נושא, בשני קולות — שישה פרקים לניצן, ארבעה לשלמה ופרק חזרה. בסוף כל פרק: שאלות לדרך, עם שקט קצר לחשוב לפני התשובה.</p>
+</div><button class="iconbtn" id="theme" title="מצב כהה / בהיר">◐</button></div>
+<p class="tot">11 פרקים · שעתיים ו-11 דקות</p>
+<div class="nav">
+<a href="../index.html">🎯 <span><b>בוחן התרגול</b> <em>· שאלות אמריקאיות וסימולציית מבחן</em></span></a>
+<a href="../%D7%A0%D7%95%D7%A1%D7%97%D7%90%D7%95%D7%AA.html">📐 <span><b>דף נוסחאות ומושגים</b> <em>· כל נוסחה עם דוגמה פתורה</em></span></a>
+</div>
+<div class="speed">מהירות השמעה:
+<button type="button" dir="ltr" data-r="1">×1</button><button type="button" dir="ltr" data-r="1.25">×1.25</button><button type="button" dir="ltr" data-r="1.5">×1.5</button>
+</div>
+<div class="ep" id="ep01"><div class="hd"><bdi class="num">01</bdi><span class="ttl">חיזוי — אינטגרציה, שיטות וחיזוי עונתי</span><bdi class="dur">14:04</bdi></div><audio controls preload="none" src="mp3/01%20-%20%D7%97%D7%99%D7%96%D7%95%D7%99%20%E2%80%94%20%D7%90%D7%99%D7%A0%D7%98%D7%92%D7%A8%D7%A6%D7%99%D7%94%2C%20%D7%A9%D7%99%D7%98%D7%95%D7%AA%20%D7%95%D7%97%D7%99%D7%96%D7%95%D7%99%20%D7%A2%D7%95%D7%A0%D7%AA%D7%99.mp3"></audio><div class="row"><a href="mp3/01%20-%20%D7%97%D7%99%D7%96%D7%95%D7%99%20%E2%80%94%20%D7%90%D7%99%D7%A0%D7%98%D7%92%D7%A8%D7%A6%D7%99%D7%94%2C%20%D7%A9%D7%99%D7%98%D7%95%D7%AA%20%D7%95%D7%97%D7%99%D7%96%D7%95%D7%99%20%D7%A2%D7%95%D7%A0%D7%AA%D7%99.mp3" download="01 - חיזוי — אינטגרציה, שיטות וחיזוי עונתי.mp3">⬇ הורדה</a><bdi>6.8 MB</bdi></div></div>
+<div class="ep" id="ep02"><div class="hd"><bdi class="num">02</bdi><span class="ttl">ניהול מלאי — עלויות, מודל המסור ואילוצים</span><bdi class="dur">11:08</bdi></div><audio controls preload="none" src="mp3/02%20-%20%D7%A0%D7%99%D7%94%D7%95%D7%9C%20%D7%9E%D7%9C%D7%90%D7%99%20%E2%80%94%20%D7%A2%D7%9C%D7%95%D7%99%D7%95%D7%AA%2C%20%D7%9E%D7%95%D7%93%D7%9C%20%D7%94%D7%9E%D7%A1%D7%95%D7%A8%20%D7%95%D7%90%D7%99%D7%9C%D7%95%D7%A6%D7%99%D7%9D.mp3"></audio><div class="row"><a href="mp3/02%20-%20%D7%A0%D7%99%D7%94%D7%95%D7%9C%20%D7%9E%D7%9C%D7%90%D7%99%20%E2%80%94%20%D7%A2%D7%9C%D7%95%D7%99%D7%95%D7%AA%2C%20%D7%9E%D7%95%D7%93%D7%9C%20%D7%94%D7%9E%D7%A1%D7%95%D7%A8%20%D7%95%D7%90%D7%99%D7%9C%D7%95%D7%A6%D7%99%D7%9D.mp3" download="02 - ניהול מלאי — עלויות, מודל המסור ואילוצים.mp3">⬇ הורדה</a><bdi>5.4 MB</bdi></div></div>
+<div class="ep" id="ep03"><div class="hd"><bdi class="num">03</bdi><span class="ttl">מלאי ביטחון ונקודת הזמנה</span><bdi class="dur">10:28</bdi></div><audio controls preload="none" src="mp3/03%20-%20%D7%9E%D7%9C%D7%90%D7%99%20%D7%91%D7%99%D7%98%D7%97%D7%95%D7%9F%20%D7%95%D7%A0%D7%A7%D7%95%D7%93%D7%AA%20%D7%94%D7%96%D7%9E%D7%A0%D7%94.mp3"></audio><div class="row"><a href="mp3/03%20-%20%D7%9E%D7%9C%D7%90%D7%99%20%D7%91%D7%99%D7%98%D7%97%D7%95%D7%9F%20%D7%95%D7%A0%D7%A7%D7%95%D7%93%D7%AA%20%D7%94%D7%96%D7%9E%D7%A0%D7%94.mp3" download="03 - מלאי ביטחון ונקודת הזמנה.mp3">⬇ הורדה</a><bdi>5.0 MB</bdi></div></div>
+<div class="ep" id="ep04"><div class="hd"><bdi class="num">04</bdi><span class="ttl">פארטו ופילוחים — אי בי סי ופילוח רב ממדי</span><bdi class="dur">9:28</bdi></div><audio controls preload="none" src="mp3/04%20-%20%D7%A4%D7%90%D7%A8%D7%98%D7%95%20%D7%95%D7%A4%D7%99%D7%9C%D7%95%D7%97%D7%99%D7%9D%20%E2%80%94%20%D7%90%D7%99%20%D7%91%D7%99%20%D7%A1%D7%99%20%D7%95%D7%A4%D7%99%D7%9C%D7%95%D7%97%20%D7%A8%D7%91%20%D7%9E%D7%9E%D7%93%D7%99.mp3"></audio><div class="row"><a href="mp3/04%20-%20%D7%A4%D7%90%D7%A8%D7%98%D7%95%20%D7%95%D7%A4%D7%99%D7%9C%D7%95%D7%97%D7%99%D7%9D%20%E2%80%94%20%D7%90%D7%99%20%D7%91%D7%99%20%D7%A1%D7%99%20%D7%95%D7%A4%D7%99%D7%9C%D7%95%D7%97%20%D7%A8%D7%91%20%D7%9E%D7%9E%D7%93%D7%99.mp3" download="04 - פארטו ופילוחים — אי בי סי ופילוח רב ממדי.mp3">⬇ הורדה</a><bdi>4.6 MB</bdi></div></div>
+<div class="ep" id="ep05"><div class="hd"><bdi class="num">05</bdi><span class="ttl">אחזקה ואמינות — גישות, עלויות, טור ומקביל</span><bdi class="dur">12:28</bdi></div><audio controls preload="none" src="mp3/05%20-%20%D7%90%D7%97%D7%96%D7%A7%D7%94%20%D7%95%D7%90%D7%9E%D7%99%D7%A0%D7%95%D7%AA%20%E2%80%94%20%D7%92%D7%99%D7%A9%D7%95%D7%AA%2C%20%D7%A2%D7%9C%D7%95%D7%99%D7%95%D7%AA%2C%20%D7%98%D7%95%D7%A8%20%D7%95%D7%9E%D7%A7%D7%91%D7%99%D7%9C.mp3"></audio><div class="row"><a href="mp3/05%20-%20%D7%90%D7%97%D7%96%D7%A7%D7%94%20%D7%95%D7%90%D7%9E%D7%99%D7%A0%D7%95%D7%AA%20%E2%80%94%20%D7%92%D7%99%D7%A9%D7%95%D7%AA%2C%20%D7%A2%D7%9C%D7%95%D7%99%D7%95%D7%AA%2C%20%D7%98%D7%95%D7%A8%20%D7%95%D7%9E%D7%A7%D7%91%D7%99%D7%9C.mp3" download="05 - אחזקה ואמינות — גישות, עלויות, טור ומקביל.mp3">⬇ הורדה</a><bdi>6.0 MB</bdi></div></div>
+<div class="ep" id="ep06"><div class="hd"><bdi class="num">06</bdi><span class="ttl">תדירות אחזקה מונעת ונקודת איזון</span><bdi class="dur">10:07</bdi></div><audio controls preload="none" src="mp3/06%20-%20%D7%AA%D7%93%D7%99%D7%A8%D7%95%D7%AA%20%D7%90%D7%97%D7%96%D7%A7%D7%94%20%D7%9E%D7%95%D7%A0%D7%A2%D7%AA%20%D7%95%D7%A0%D7%A7%D7%95%D7%93%D7%AA%20%D7%90%D7%99%D7%96%D7%95%D7%9F.mp3"></audio><div class="row"><a href="mp3/06%20-%20%D7%AA%D7%93%D7%99%D7%A8%D7%95%D7%AA%20%D7%90%D7%97%D7%96%D7%A7%D7%94%20%D7%9E%D7%95%D7%A0%D7%A2%D7%AA%20%D7%95%D7%A0%D7%A7%D7%95%D7%93%D7%AA%20%D7%90%D7%99%D7%96%D7%95%D7%9F.mp3" download="06 - תדירות אחזקה מונעת ונקודת איזון.mp3">⬇ הורדה</a><bdi>4.9 MB</bdi></div></div>
+<div class="ep" id="ep07"><div class="hd"><bdi class="num">07</bdi><span class="ttl">שלמה — מבנה השרשרת וניהול חומר</span><bdi class="dur">17:15</bdi></div><audio controls preload="none" src="mp3/07%20-%20%D7%A9%D7%9C%D7%9E%D7%94%20%E2%80%94%20%D7%9E%D7%91%D7%A0%D7%94%20%D7%94%D7%A9%D7%A8%D7%A9%D7%A8%D7%AA%20%D7%95%D7%A0%D7%99%D7%94%D7%95%D7%9C%20%D7%97%D7%95%D7%9E%D7%A8.mp3"></audio><div class="row"><a href="mp3/07%20-%20%D7%A9%D7%9C%D7%9E%D7%94%20%E2%80%94%20%D7%9E%D7%91%D7%A0%D7%94%20%D7%94%D7%A9%D7%A8%D7%A9%D7%A8%D7%AA%20%D7%95%D7%A0%D7%99%D7%94%D7%95%D7%9C%20%D7%97%D7%95%D7%9E%D7%A8.mp3" download="07 - שלמה — מבנה השרשרת וניהול חומר.mp3">⬇ הורדה</a><bdi>8.3 MB</bdi></div></div>
+<div class="ep" id="ep08"><div class="hd"><bdi class="num">08</bdi><span class="ttl">שלמה — רכש, ייצור ומיקור חוץ</span><bdi class="dur">12:51</bdi></div><audio controls preload="none" src="mp3/08%20-%20%D7%A9%D7%9C%D7%9E%D7%94%20%E2%80%94%20%D7%A8%D7%9B%D7%A9%2C%20%D7%99%D7%99%D7%A6%D7%95%D7%A8%20%D7%95%D7%9E%D7%99%D7%A7%D7%95%D7%A8%20%D7%97%D7%95%D7%A5.mp3"></audio><div class="row"><a href="mp3/08%20-%20%D7%A9%D7%9C%D7%9E%D7%94%20%E2%80%94%20%D7%A8%D7%9B%D7%A9%2C%20%D7%99%D7%99%D7%A6%D7%95%D7%A8%20%D7%95%D7%9E%D7%99%D7%A7%D7%95%D7%A8%20%D7%97%D7%95%D7%A5.mp3" download="08 - שלמה — רכש, ייצור ומיקור חוץ.mp3">⬇ הורדה</a><bdi>6.2 MB</bdi></div></div>
+<div class="ep" id="ep09"><div class="hd"><bdi class="num">09</bdi><span class="ttl">שלמה — הזמנות לקוח ולוגיסטיקה</span><bdi class="dur">10:25</bdi></div><audio controls preload="none" src="mp3/09%20-%20%D7%A9%D7%9C%D7%9E%D7%94%20%E2%80%94%20%D7%94%D7%96%D7%9E%D7%A0%D7%95%D7%AA%20%D7%9C%D7%A7%D7%95%D7%97%20%D7%95%D7%9C%D7%95%D7%92%D7%99%D7%A1%D7%98%D7%99%D7%A7%D7%94.mp3"></audio><div class="row"><a href="mp3/09%20-%20%D7%A9%D7%9C%D7%9E%D7%94%20%E2%80%94%20%D7%94%D7%96%D7%9E%D7%A0%D7%95%D7%AA%20%D7%9C%D7%A7%D7%95%D7%97%20%D7%95%D7%9C%D7%95%D7%92%D7%99%D7%A1%D7%98%D7%99%D7%A7%D7%94.mp3" download="09 - שלמה — הזמנות לקוח ולוגיסטיקה.mp3">⬇ הורדה</a><bdi>5.0 MB</bdi></div></div>
+<div class="ep" id="ep10"><div class="hd"><bdi class="num">10</bdi><span class="ttl">שלמה — אסטרטגיה, זמישות וארגז הכלים</span><bdi class="dur">12:10</bdi></div><audio controls preload="none" src="mp3/10%20-%20%D7%A9%D7%9C%D7%9E%D7%94%20%E2%80%94%20%D7%90%D7%A1%D7%98%D7%A8%D7%98%D7%92%D7%99%D7%94%2C%20%D7%96%D7%9E%D7%99%D7%A9%D7%95%D7%AA%20%D7%95%D7%90%D7%A8%D7%92%D7%96%20%D7%94%D7%9B%D7%9C%D7%99%D7%9D.mp3"></audio><div class="row"><a href="mp3/10%20-%20%D7%A9%D7%9C%D7%9E%D7%94%20%E2%80%94%20%D7%90%D7%A1%D7%98%D7%A8%D7%98%D7%92%D7%99%D7%94%2C%20%D7%96%D7%9E%D7%99%D7%A9%D7%95%D7%AA%20%D7%95%D7%90%D7%A8%D7%92%D7%96%20%D7%94%D7%9B%D7%9C%D7%99%D7%9D.mp3" download="10 - שלמה — אסטרטגיה, זמישות וארגז הכלים.mp3">⬇ הורדה</a><bdi>5.8 MB</bdi></div></div>
+<div class="ep" id="ep11"><div class="hd"><bdi class="num">11</bdi><span class="ttl">חזרה למבחן — מלכודות החישוב וטעויות בשקפים</span><bdi class="dur">10:09</bdi></div><audio controls preload="none" src="mp3/11%20-%20%D7%97%D7%96%D7%A8%D7%94%20%D7%9C%D7%9E%D7%91%D7%97%D7%9F%20%E2%80%94%20%D7%9E%D7%9C%D7%9B%D7%95%D7%93%D7%95%D7%AA%20%D7%94%D7%97%D7%99%D7%A9%D7%95%D7%91%20%D7%95%D7%98%D7%A2%D7%95%D7%99%D7%95%D7%AA%20%D7%91%D7%A9%D7%A7%D7%A4%D7%99%D7%9D.mp3"></audio><div class="row"><a href="mp3/11%20-%20%D7%97%D7%96%D7%A8%D7%94%20%D7%9C%D7%9E%D7%91%D7%97%D7%9F%20%E2%80%94%20%D7%9E%D7%9C%D7%9B%D7%95%D7%93%D7%95%D7%AA%20%D7%94%D7%97%D7%99%D7%A9%D7%95%D7%91%20%D7%95%D7%98%D7%A2%D7%95%D7%99%D7%95%D7%AA%20%D7%91%D7%A9%D7%A7%D7%A4%D7%99%D7%9D.mp3" download="11 - חזרה למבחן — מלכודות החישוב וטעויות בשקפים.mp3">⬇ הורדה</a><bdi>4.9 MB</bdi></div></div>
+<p class="note">אפשר להוריד את הפרקים ולהאזין בלי אינטרנט. הקבצים מתויגים כאלבום אחד לפי מספר פרק, כך שכל נגן ישמור על הסדר.
+הקולות מסונתזים, והתסריטים נכתבו מאותו חומר של הבוחן ודף הנוסחאות, כדי שכולם יגידו אותו דבר.</p>
+</div>
+<script>
+(function(){
+  var audios=[].slice.call(document.querySelectorAll('audio'));
+  var btns=[].slice.call(document.querySelectorAll('.speed button'));
+  var rate=1;try{rate=parseFloat(localStorage.getItem('scmq_rate'))||1;}catch(e){}
+  function setRate(r){rate=r;audios.forEach(function(a){a.playbackRate=r;});
+    btns.forEach(function(b){b.classList.toggle('on',parseFloat(b.getAttribute('data-r'))===r);});
+    try{localStorage.setItem('scmq_rate',String(r));}catch(e){}}
+  btns.forEach(function(b){b.onclick=function(){setRate(parseFloat(b.getAttribute('data-r')));};});
+  audios.forEach(function(a){
+    a.addEventListener('play',function(){a.playbackRate=rate;
+      audios.forEach(function(o){if(o!==a)o.pause();});});
+  });
+  setRate(rate);
+  document.getElementById('theme').onclick=function(){
+    var cur=document.documentElement.className;
+    var dark=cur==='dark'||(cur!=='light'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches);
+    var nx=dark?'light':'dark';document.documentElement.className=nx;
+    try{localStorage.setItem('scmq_theme',nx);}catch(e){}
+  };
+})();
+</script>
+</body>
+</html>

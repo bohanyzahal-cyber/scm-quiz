@@ -64,10 +64,13 @@ KTAB = {0.85: 1.44, 0.88: 1.56, 0.90: 1.65, 0.92: 1.75, 0.95: 1.96}
 Q = []
 
 
-def add(q, a, d, e, calc=True, s=None):
+def add(q, a, d, e, calc=True, s=None, t=None):
+    """t — נושא אחר מהנושא הראשי של הקובץ (למשל ״להעשרה, לא במבחן״)."""
     it = dict(q=q, a=a, d=list(d), e=e)
     if calc:
         it["k"] = "calc"
     if s:
         it["s"] = s
+    if t:
+        it["t"] = t
     Q.append(it)

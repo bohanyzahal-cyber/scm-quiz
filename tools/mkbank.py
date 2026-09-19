@@ -109,7 +109,7 @@ for i, it in enumerate(Q):
     opts = ds[:c] + [it["a"]] + ds[c:]
     s = it.get("s", S)
     line = "{t:%s,s:%s,q:%s,o:[%s],c:%d,e:%s%s}" % (
-        js(T), js(s), js(iso(it["q"])), ",".join(js(iso(o)) for o in opts), c, js(iso(it["e"])),
+        js(it.get("t", T)), js(s), js(iso(it["q"])), ",".join(js(iso(o)) for o in opts), c, js(iso(it["e"])),
         (",k:" + js(it["k"])) if it.get("k") else "")
     lines.append(line)
     la, ld = vlen(it["a"]), [vlen(x) for x in it["d"]]

@@ -184,6 +184,9 @@ header .sub{color:var(--muted);font-size:13.5px;margin-bottom:16px;}
     <a class="aid" href="נוסחאות.html" target="_blank" rel="noopener">
       <i>📐</i><span><b>דף נוסחאות ומושגים</b> · הנוסחאות של ניצן עם דוגמה פתורה לכל אחת, והמודלים של שלמה בעמוד</span>
     </a>
+    <a class="aid" href="podcast/index.html" target="_blank" rel="noopener">
+      <i>🎧</i><span><b>פודקאסט להאזנה</b> · 11 פרקים, כשעתיים: המודלים של ניצן, המצגות של שלמה וחזרה למבחן</span>
+    </a>
   </div>
 </header>
 <div id="app"></div>
@@ -207,7 +210,8 @@ var SRC_META={
 var app=document.getElementById("app");
 var TOPICS=[]; (function(){var s={};BANK.forEach(function(b){if(!s[b.t]){s[b.t]=1;TOPICS.push(b.t);}}); })();
 
-var sel={topics:TOPICS.slice(),src:"all",mode:"practice",shuffle:true,minutes:0,count:25,pcount:20,balanced:true};
+/* נושא שהמרצה אמר שלא יהיה במבחן (למשל דה-קומפוזיציה) — לא מסומן כברירת מחדל */
+var sel={topics:TOPICS.filter(function(t){return t.indexOf("לא במבחן")<0;}),src:"all",mode:"practice",shuffle:true,minutes:0,count:25,pcount:20,balanced:true};
 var quiz=[],idx=0,score=0,answered=false,wrong=[],ansMap=[],timer=null,timeLeft=0;
 
 function E(tag,attr,html){var e=document.createElement(tag);if(attr)for(var k in attr)e.setAttribute(k,attr[k]);if(html!=null)e.innerHTML=html;return e;}
