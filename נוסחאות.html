@@ -24,6 +24,13 @@ h3{font-size:15px;margin:16px 0 6px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
 .f{font-family:'Cambria Math','Times New Roman',serif;font-size:16px;direction:ltr;text-align:left;background:var(--s2);border-radius:8px;padding:7px 12px;margin:6px 0;display:block;unicode-bidi:isolate}
 .f i{font-style:italic}
+/* נוסחה במילים (עברית) — מימין לשמאל; חלקים לטיניים בתוכה עטופים ב-bdi */
+.f.fr{direction:rtl;text-align:right;font-family:'Segoe UI',Arial,sans-serif;font-size:15px}
+/* ביטוי משמאל לימין בתוך טקסט עברי — יחידה אחת שלא נשברת באמצע */
+bdi{display:inline-block;max-width:100%}
+/* חלק א (ניצן) — שני טורים רחבים, ודוגמאות בשורות נפרדות */
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(380px,100%),1fr))}
+.ex{margin:3px 0;padding-right:10px;border-right:2px solid var(--border)}
 .f sub{font-size:11px}
 .note{background:var(--accentSoft);border-right:3px solid var(--accent);padding:8px 12px;border-radius:0 8px 8px 0;margin:8px 0;font-size:13.5px}
 .warn{background:var(--warnBg);border-right:3px solid var(--warnTx);padding:8px 12px;border-radius:0 8px 8px 0;margin:8px 0;font-size:13.5px}
@@ -55,14 +62,13 @@ li{margin:2px 0}
 <a class="back" href="index.html">← לבוחן התרגול</a>
 <div class="wrap">
 <h1>דף נוסחאות ומושגים — ניהול שרשרת ההספקה</h1>
-<div class="sub">חלק א: המודלים הכמותיים של ד"ר ניצן סוויד, עם דוגמה פתורה. חלק ב: המודלים של שלמה ארליך בעמוד אחד. מספרי השקפים לפי המצגות באתר הקורס.</div>
+<div class="sub">חלק א: המודלים הכמותיים של ד"ר ניצן סוויד (מצגות 1–11), עם דוגמאות פתורות והערות על טעויות חישוב בשקפים. חלק ב: המודלים של שלמה ארליך בעמוד אחד. מספרי השקפים לפי המצגות באתר הקורס.</div>
 <div class="toc">
   <a href="#fc">חיזוי — נוסחאות</a><a href="#ex">חיזוי — דוגמת הכיתה פתורה</a><a href="#err">מדדי דיוק ובחירת שיטה</a>
+  <a href="#int">אינטגרציה</a><a href="#seas">חיזוי עונתי</a><a href="#eoq">מלאי ו-EOQ</a><a href="#ss">מלאי ביטחון ונקודת הזמנה</a><a href="#par">פארטו</a><a href="#mnt">אחזקה</a><a href="#rel">אמינות</a><a href="#pm">תדירות אחזקה מונעת</a><a href="#be">נקודת איזון וחלופות</a>
   <a href="#s1">מבנה השרשרת ומטרותיה</a><a href="#s2">ניהול חומר ומלאי</a><a href="#s3">רכש</a><a href="#s4">ייצור ומיקור חוץ</a>
   <a href="#s5">הזמנות ולוגיסטיקה</a><a href="#s7">אסטרטגיה וזמישות</a><a href="#s8">ארגז הכלים</a>
 </div>
-
-<div class="warn"><b>הדף חלקי בשלב זה:</b> נושאי ניצן שעדיין לא נכללו — חיזוי עונתי, רמות מלאי ו-EOQ, מלאי ביטחון ונקודת הזמנה, פארטו, אחזקה, אמינות וזמינות, תדירות טיפולים וחלופות רכש — יתווספו אחרי קריאת מצגות 3–11.</div>
 
 <h2 id="fc">חיזוי — הנוסחאות <small>מצגת 2 · הרצאות 28.7, 4.8, 11.8</small></h2>
 <div class="grid">
@@ -137,6 +143,236 @@ n = 7, Σx = 28, Σy = 15,376, Σxy = 70,145, Σx² = 140, Σy² = 36,553,882.<b
 <div class="note">הרגרסיה מקבלת את המדדים הנמוכים ביותר (MAD 62.06, MSE 5,228 — כמו בשקף 34) ולכן היא השיטה הנבחרת, והתחזית ל-2020 היא <b>3,436</b>. הממוצעים הנעים מפגרים אחרי המגמה העולה — לכן הסטיות שלהם גדולות. שימו לב: ה-MAD של הממוצעים הנעים מחושב רק על התקופות שיש להן תחזית (5 או 4), לא על 7.<br>
 <b>דוגמה לחישוב אחד (WMA N=3, שנת 2016):</b> F = (1282×0.4 + 1447×0.5 + 1972×0.6) / (0.4+0.5+0.6) = 2419.5 / 1.5 = 1613 — בדיוק כמו בשקף 26.<br>
 <b>הערה על שקף 34:</b> שורת "ממוצע נע משוקלל N=2" בטבלת הסיכום בשקף (MAD 2639.755, MSE 12,754,913) לקוחה משקף 25, שחושב בטעות על סדרת נתונים אחרת (29,195; 16,189; …). על נתוני הגיוס הערכים הנכונים הם אלה שבטבלה כאן — והמסקנה לא משתנה: הרגרסיה היא הטובה ביותר.</div>
+</div>
+
+<h2 id="int">אינטגרציה בשרשרת האספקה <small>מצגת 1 · הרצאה 14.7</small></h2>
+<div class="grid g2">
+<div class="card"><h3>מושגי יסוד <span class="tag">שקפים 2–7</span></h3>
+<ul>
+<li><b>שרשרת אספקה</b> — דרך זרימת החומרים מספק חומרי הגלם ועד הלקוח. שחקנים ראשיים: ספקים, יצרנים, לקוחות; שחקני משנה: מתווכים, מיקור חוץ.</li>
+<li><b>שלושה שלבים:</b> ישויות נפרדות ← אינטגרציה פנימית ← שרשרת הספקה אינטגרטיבית.</li>
+<li><b>שרשרת המידע:</b> <bdi dir="ltr">SRM</bdi> (היצע — ספקים) · <bdi dir="ltr">ISCM</bdi> (פנים-ארגוני) · <bdi dir="ltr">CRM</bdi> (ביקוש — לקוחות).</li>
+<li>שגיאות במידע מקטינות את רווחי הספקים בכ-10%; עדכון מידי שעה מקטין עיכובים לעומת עדכון יומי.</li>
+</ul></div>
+<div class="card"><h3>שוט השור והפתרון <span class="tag">שקפים 8–16</span></h3>
+<ul>
+<li><b><bdi dir="ltr">Bullwhip</bdi>:</b> התנודות מהפער בין החזוי לבפועל <b>גדלות ככל שמתקדמים במעלה הזרם</b>.</li>
+<li>גורמים חיצוניים: קצב צריכה, תמהיל ייצור, התארכות זמני אספקה. פנימיים: שינויים הנדסיים, מידע שגוי וסטיות מתחזיות.</li>
+<li>הפתרון — אינטגרציה: התחרות היא בין שרשראות ולא בין פירמות; <bdi dir="ltr">VMI/CMI</bdi>, שיתוף סיכונים וסיכויים, מדיניות אחידה, צוותים רב-תחומיים, משיכה על פני דחיפה, <bdi dir="ltr">JIT</bdi>, <bdi dir="ltr">Lean</bdi>.</li>
+<li><b>הקושי העיקרי:</b> קיבעון מחשבתי ← ניהול שינויים.</li>
+<li><b>דל:</b> ייצור לפי הזמנה (״חליפה״), <bdi dir="ltr">JIT</bdi> וספקים קרובים ← תגובתיות ופערי אשראי חיוביים.</li>
+</ul></div>
+</div>
+
+<h2 id="seas">חיזוי עונתי <small>מצגת 3</small></h2>
+<div class="grid g2">
+<div class="card"><h3>מקדם עונתיות <span class="tag">שקפים 7–8</span></h3>
+<span class="f">C<sub>j</sub> = D<sub>j</sub> / D̄ &nbsp;&nbsp;·&nbsp;&nbsp; ΣC<sub>j</sub> = N</span>
+<bdi dir="ltr">D</bdi>̄ — הממוצע הבין-עונתי. מעל 1 — ביקוש גבוה מהממוצע; מתחת ל-1 — נמוך; ככל שרחוק יותר מ-1, העונתיות חזקה יותר.<br>
+דוגמה — ביקוש 100, 120, 170, 40, 80:<div class="ex"><bdi dir="ltr">D̄ = 102</bdi> ← <bdi dir="ltr">C1 = 100/102 = 0.98</bdi> (2% מתחת לממוצע)</div><div class="ex"><bdi dir="ltr">C2 = 120/102 = 1.176</bdi> (17.6% מעל הממוצע)</div></div>
+<div class="card"><h3>מבחן העונתיות — כלל אצבע <span class="tag">שקפים 9–10</span></h3>
+מחשבים מקדם לכל עונה בכל שנה (ביקוש העונה ÷ הממוצע הבין-עונתי של אותה שנה), ממצעים עונות מקבילות. <b>עונתי אם לפחות מקדם ממוצע אחד גדול מ-1.2 ו/או קטן מ-0.8.</b><br>
+פיתות: 1.43, 0.97, 0.67, 0.93 ← עונתי מובהק.</div>
+<div class="card"><h3>דה-קומפוזיציה (פירוק) <span class="tag">שקפים 12–19</span></h3>
+הנחה: הגידול קיים רק <b>בין</b> המחזורים; בתוך המחזור העונתיות קבועה. שלבים: (1) ממוצע לכל מחזור; (2) נתון ÷ ממוצע המחזור שלו ← ממוצע לכל עונה = מקדמי העונתיות; (3) נרמול: נתון ÷ מקדם העונה ← ממוצעי מחזור מנורמלים; (4) רגרסיה: <bdi dir="ltr">X</bdi> = מספר המחזור, <bdi dir="ltr">Y</bdi> = הממוצע המנורמל; (5) תחזית:
+<span class="f">F<sub>t</sub> = [a + b·⌈t/L⌉] · C<sub>i</sub></span>
+<bdi dir="ltr">L</bdi> — מספר העונות במחזור; <bdi dir="ltr">⌈t/L⌉</bdi> — מספר המחזור (עיגול כלפי מעלה). בדוגמה: <bdi dir="ltr">L = 5, â = 5.4, b̂ = 1.25</bdi>, מקדמים 1.20 / 0.59 / 0.43 / 0.91 / 1.88:<div class="ex"><bdi dir="ltr">F26 = (5.4 + 1.25·⌈26/5⌉)·1.2 = 12.9·1.2 = 15.48</bdi></div><div class="ex"><bdi dir="ltr">F27 = 7.61 · F28 = 5.55 · F29 = 11.74 · F30 = 24.25</bdi></div></div>
+<div class="card"><h3>השיטה הפשוטה <span class="tag">שקפים 20–23</span></h3>
+ממוצע כל מחזור (״נציג המחזור״) ← רגרסיה על הנציגים ← תחזית לנציג המחזור הבא ← כפול מקדם העונתיות הממוצע. ההבדל מדה-קומפוזיציה: <b>בלי נרמול</b> לפני הרגרסיה.<br>
+דוגמה: נציגים 7, 8, 9, 10 ← נציג מחזור 5 = 11 ← לעונה 5: <bdi dir="ltr">11 · 1.877 = 20.65</bdi>.
+<div class="warn" style="margin-top:6px">בשקף 23, השורות שמעל הטבלה (״<bdi dir="ltr">F1,1 = 5 · 1.198</bdi>…״, ״<bdi dir="ltr">MAD = 1.829</bdi>״) לא תואמות את הטבלה שמתחתיהן — כנראה שרידים מדוגמה אחרת. הטבלה עצמה (נציגים 7–11) היא החישוב הנכון.</div></div>
+</div>
+
+<h2 id="eoq">ניהול רמות מלאי ו-EOQ <small>מצגת 4</small></h2>
+<div class="grid g2">
+<div class="card"><h3>מקדם אחזקת מלאי i <span class="tag">שקפים 11–18</span></h3>
+<span class="f fr">מקדם אחזקה: <bdi dir="ltr">i</bdi> = עלויות אחזקה שנתיות ÷ ערך מלאי ממוצע</span>
+רכיבים: תפעול מחסן (ארנונה ושכירות — רק החלק של המחסן, שכר עובדי מחסן, פחת ציוד, ביטוח), קלקולים, התיישנות, מימון.<br>
+דוגמה (תפעול מחסן + קלקולים + התיישנות + מימון):<div class="ex"><bdi dir="ltr">527,200 + 70,000 + 50,000 + 64,000 = 711,000</bdi></div><div class="ex"><bdi dir="ltr">i = 711,000 / 3,200,000 = 22%</bdi></div></div>
+<div class="card"><h3>עלות הזמנה K <span class="tag">שקפים 13–14, 19–21</span></h3>
+<span class="f fr">עלות הזמנה: <bdi dir="ltr">K</bdi> = עלויות הזמנות שנתיות ÷ מספר הזמנות בשנה</span>
+רכיבים: התכתבות והצעות מחיר, אשראי ובנקים, מעקב, חשבונות ספקים, עמילות מכס, הובלה וביטוח הובלה, תקשורת.<br>
+דוגמה (שכר מעקב + הובלה + מכס + תקשורת), 2,000 הזמנות בשנה:<div class="ex"><bdi dir="ltr">360,000 + 100,000 + 150,000 + 30,000 = 640,000</bdi></div><div class="ex"><bdi dir="ltr">K = 640,000 / 2,000 = 320</bdi> ₪</div></div>
+<div class="card"><h3>מודל המסור — EOQ <span class="tag">שקפים 22–29</span></h3>
+<span class="f">G = (B + Q/2)·C·i + (λ/Q)·K</span>
+<span class="f">Q* = √(2λK / (C·i)) &nbsp;&nbsp;·&nbsp;&nbsp; N = λ/Q &nbsp;&nbsp;·&nbsp;&nbsp; T = 365/N</span>
+עם עלות הרכישה: <bdi dir="ltr">TC = G + λ·C</bdi>. <bdi dir="ltr">h = C·i</bdi> — עלות אחזקת יחידה לשנה. ב-<bdi dir="ltr">Q*</bdi> עלות האחזקה = עלות ההזמנות. הנחות: צריכה אחידה, <bdi dir="ltr">C</bdi> ו-<bdi dir="ltr">K</bdi> קבועים, קבלה בבת אחת, <bdi dir="ltr">i</bdi> קבוע, אין חוסר.</div>
+<div class="card"><h3>מדדי מלאי <span class="tag">שקף 9</span></h3>
+<span class="f fr">סבבי מלאי = ערך צריכה שנתי ÷ ערך מלאי ממוצע</span>
+<span class="f fr">מלאי בשבועות = ערך מלאי ממוצע ÷ ערך צריכה שבועי</span>
+<div class="warn">בשקף 9 שני השברים כתובים הפוך. בדיקת שפיות: מלאי ממוצע של 3.2 מיליון וצריכה שנתית של 19.2 מיליון — 6 סבבים בשנה, לא 0.17.</div></div>
+</div>
+<div class="card"><h3>הדוגמה הפתורה והאילוצים <span class="tag">שקפים 30–38</span></h3>
+<bdi dir="ltr">λ = 12,000</bdi> בשנה (1,000 בחודש), <bdi dir="ltr">C = 200</bdi> ₪, <bdi dir="ltr">i = 22%</bdi> (<bdi dir="ltr">h = 44</bdi>), <bdi dir="ltr">K = 320</bdi> ₪, בלי מלאי ביטחון.
+<span class="f">Q* = √(2·12,000·320 / 44) = 418 &nbsp;·&nbsp; G = 9,196 + 9,187 = 18,383</span>
+<table>
+<tr><th>מצב</th><th class="n"><bdi dir="ltr">Q</bdi></th><th class="n"><bdi dir="ltr">G</bdi> (₪)</th><th class="n"><bdi dir="ltr">N</bdi></th><th class="n"><bdi dir="ltr">T</bdi> (ימים)</th><th>הכלל</th></tr>
+<tr><td>ללא אילוץ</td><td class="n">418</td><td class="n">18,383</td><td class="n">28.71</td><td class="n">12.72</td><td><bdi dir="ltr">EOQ</bdi></td></tr>
+<tr><td>חבילות של 100</td><td class="n">400</td><td class="n">18,400</td><td class="n">30</td><td class="n">12.17</td><td>משווים את שתי הכפולות: <bdi dir="ltr">G(500) = 18,680</bdi></td></tr>
+<tr><td>פג תוקף 10 ימים</td><td class="n">329</td><td class="n">18,910</td><td class="n">36.47</td><td class="n">10</td><td><bdi dir="ltr">Q = λ/365 · 10</bdi></td></tr>
+<tr><td>נפח 305</td><td class="n">305</td><td class="n">19,300</td><td class="n">39.34</td><td class="n">9.28</td><td>הקיבולת</td></tr>
+<tr><td>כל האילוצים יחד</td><td class="n">300</td><td class="n">19,400</td><td class="n">40</td><td class="n">9.1</td><td>הכפולה הגדולה שאינה עוברת אף מגבלה</td></tr>
+</table>
+<div class="note">כשהפתרון אינו אופטימלי ״הכוכבית יורדת״ — <bdi dir="ltr">Q</bdi> ולא <bdi dir="ltr">Q*. N</bdi> ו-<bdi dir="ltr">T</bdi> לאילוץ הנפח חושבו כאן (לא מופיעים בשקף).</div></div>
+
+<h2 id="ss">מלאי ביטחון ונקודת הזמנה <small>מצגת 5</small></h2>
+<div class="grid g2">
+<div class="card"><h3>הגישה הסטטיסטית <span class="tag">שקפים 2–12</span></h3>
+<span class="f">B = K · S · √t</span>
+<bdi dir="ltr">S</bdi> — סטיית תקן <b>מדגמית</b> של הצריכה ליחידת זמן; <bdi dir="ltr">t</bdi> — זמן האספקה <b>באותה יחידת זמן</b> (חודש = 4.3 שבועות = 30 ימים).
+<table style="width:auto"><tr><th>רמת שירות</th><th class="n"><bdi dir="ltr">K</bdi></th></tr><tr><td>85%</td><td class="n">1.44</td></tr><tr><td>88%</td><td class="n">1.56</td></tr><tr><td>90%</td><td class="n">1.65</td></tr><tr><td>92%</td><td class="n">1.75</td></tr><tr><td>95%</td><td class="n">1.96</td></tr></table>
+גישות נוספות: כנגזרת מקצב הצריכה (למשל חודש צריכה), או מהצריכה בזמן האספקה (למשל 50%).</div>
+<div class="card"><h3>הדוגמאות — כולל תיקונים <span class="tag">שקפים 9–16</span></h3>
+<ul>
+<li>שבועי 120…110: <bdi dir="ltr">S = 24.22</bdi>, 92%, 4 ימים = <bdi dir="ltr">4/7</bdi> שבוע ← <bdi dir="ltr">B = 1.75·24.22·√(4/7) = 32.04</bdi>.</li>
+<li>חודשי 20…24: <bdi dir="ltr">S = 3.99 ≈ 4</bdi>, 90%, שבוע = <bdi dir="ltr">1/4.3</bdi> חודש ← <bdi dir="ltr">B = 3.18</bdi>.</li>
+<li>מוצר א׳: <bdi dir="ltr">S = 365.6</bdi>, שבועיים = <bdi dir="ltr">2/4.3</bdi> ← <bdi dir="ltr">B = 1.65·365.6·√(2/4.3) = 411</bdi>.</li>
+<li>מוצר ב׳: <bdi dir="ltr">S = 24.29</bdi> (שבועי), חודש = 4.3 שבועות ← <bdi dir="ltr">B = 99</bdi>. מוצר ג׳: <bdi dir="ltr">S = 14.01</bdi> (יומי), 10.5 ימים ← <bdi dir="ltr">B = 71</bdi>.</li>
+</ul>
+<div class="warn"><b>שתי טעויות בשקפים:</b> בשקף 10 כתוב <bdi dir="ltr">B = 24</bdi> — זה החישוב בלי השורש; עם השורש 32.04. בשקף 15 כתוב <bdi dir="ltr">S = 356.6</bdi> למוצר א׳ — סטיית התקן של הנתונים היא 365.6 (החלפת ספרות), ולכן <bdi dir="ltr">B ≈ 411</bdi> ולא 401.</div></div>
+<div class="card"><h3>נקודת הזמנה O.L <span class="tag">שקפים 18–25</span></h3>
+רמת המלאי (כמות, לא מועד) שבה פונים לספק.
+<span class="f">t &lt; T: &nbsp; O.L = B + Q·t/T</span>
+<span class="f">t &gt; T: &nbsp; O.L = B + λ·t̂ − Q·⌊t/T⌋</span>
+<bdi dir="ltr">t</bdi>̂ — זמן האספקה בשנים; <bdi dir="ltr">⌊ ⌋</bdi> — השלם הנמוך. דוגמאות:<div class="ex"><bdi dir="ltr">B = 30, Q = 100, T = 24, t = 18: O.L = 30 + 100·18/24 = 105</bdi></div><div class="ex"><bdi dir="ltr">1,000 + 12,000·0.083 − 418·⌊30/12.72⌋ = 1,000 + 996 − 836 = 1,160</bdi></div></div>
+<div class="card"><h3>ימי מחסור ועלות <span class="tag">שקפים 27–30</span></h3>
+<span class="f fr">הסתברות לחוסר = (1 − רמת הזמינות) ÷ 2</span>
+<span class="f fr">ימי מחסור = מספר הזמנות בשנה × זמן אספקה בימים × הסתברות לחוסר</span>
+ב-95%: <bdi dir="ltr">28.71 · 30 · 0.025 = 21.5</bdi> ימים בשנה ← 21,500 ₪ בעלות 1,000 ₪ ליום.<br>עלות האחזקה עם מלאי ביטחון:
+<span class="f">TC = (B + Q/2)·C·i + (λ/Q)·K = (471 + 209)·44 + 9,187 = 39,106</span></div>
+</div>
+<div class="card"><h3>שיעורי הבית בשקף 30 — פתורים <span class="tag">חישוב שלנו</span></h3>
+<bdi dir="ltr">S = 116</bdi> (שבועית), זמן אספקה חודש (4.3 שבועות), <bdi dir="ltr">N = 28.71</bdi>, יום חוסר = 1,000 ₪:
+<table>
+<tr><th>זמינות</th><th class="n"><bdi dir="ltr">P</bdi>(חוסר)</th><th class="n"><bdi dir="ltr">B</bdi></th><th class="n"><bdi dir="ltr">TC</bdi></th><th class="n">ימי מחסור</th><th class="n">עלות חוסר</th><th class="n">סה״כ</th></tr>
+<tr><td>95%</td><td class="n">2.5%</td><td class="n">471</td><td class="n">39,106</td><td class="n">21.5</td><td class="n">21,533</td><td class="n"><b>60,639</b></td></tr>
+<tr><td>92%</td><td class="n">4%</td><td class="n">421</td><td class="n">36,907</td><td class="n">34.5</td><td class="n">34,450</td><td class="n">71,357</td></tr>
+<tr><td>90%</td><td class="n">5%</td><td class="n">397</td><td class="n">35,851</td><td class="n">43.1</td><td class="n">43,062</td><td class="n">78,913</td></tr>
+</table>
+<div class="note">הורדת הזמינות חוסכת באחזקה פחות ממה שהיא מוסיפה בעלות החוסר — ב-1,000 ₪ ליום חוסר, 95% זולה ביותר בסך הכול.</div></div>
+
+<h2 id="par">פארטו ופילוחים <small>מצגת 6</small></h2>
+<div class="grid g2">
+<div class="card"><h3>העיקרון ושלבי העבודה <span class="tag">שקפים 3–11</span></h3>
+80% מההון בידי 20% מהמשפחות ← מיקוד מאמצי הגבייה. האחוזים <b>אינם</b> משלימים ל-100% (בישראל ~45% מההון בידי 0.25%).<br>
+שלבים: הצגת הפריטים וערכיהם ← דירוג מהגבוה לנמוך ← אחוז יחסי ומצטבר ← גרף ומסקנות. יתרון: חישוב פשוט, מסקנות משמעותיות.<br>
+בדוגמת המשלוחים: ״זמן משלוח ארוך״ — 46% מהפניות (35 מתוך 76); יחד עם ״אוכל קר״ — 72% מצטבר.</div>
+<div class="card"><h3>פילוח רב-ממדי <span class="tag">שקפים 13–18</span></h3>
+פילוח לפי מספר תלונות מוחלט ״אינו איכותי״ — צריך לנרמל: תלונות ÷ מבקרים ← גלעד (<bdi dir="ltr">39/497 ≈ 7.8%</bdi>) בעייתי. עומס (מבקרים לעובד) — אין מתאם לתלונות ← שירות לא איכותי. נתח שוק — הלקוחות ״מצביעים ברגליים״.
+<div class="warn">בשקף 16 (עומס) שמות הסניפים מוחלפים ביחס לטבלת הנתונים בשקף 13 — המסקנה נכונה, הדירוג פחות.</div></div>
+<div class="card"><h3>ABC לפי ערך צריכה <span class="tag">שקפים 19–25</span></h3>
+<span class="f fr">ערך צריכה = צריכה שנתית × מחיר ליחידה</span>
+מבטא את המשקל הכלכלי של הפריט. בדוגמת המוסך: מנוע (43%) וגיר (36%) — 79% מהערך.<table><tr><th>קבוצה</th><th>במוסך</th><th>במחסן של 1,000 מק״טים</th></tr><tr><td><b><bdi dir="ltr">A</bdi></b></td><td>2 פריטים — כ-79%</td><td>כ-50 מק״טים (5%) — כ-80% מהערך</td></tr><tr><td><b><bdi dir="ltr">B</bdi></b></td><td>3 פריטים — כ-20%</td><td>כ-150 מק״טים (15%) — כ-15%</td></tr><tr><td><b><bdi dir="ltr">C</bdi></b></td><td>6 פריטים — פחות מ-1%</td><td>כ-800 מק״טים (80%) — כ-5%</td></tr></table>
+<ul>
+<li><b><bdi dir="ltr">A</bdi></b> — כמויות קטנות ומדודות + ״קשב ניהולי״ (בקרה קפדנית, ספירות תכופות).</li>
+<li><b><bdi dir="ltr">B</bdi></b> — כמו <bdi dir="ltr">A</bdi>, עם מלאי ביטחון גדול יותר.</li>
+<li><b><bdi dir="ltr">C</bdi></b> — כמויות גדולות, זמינות גבוהה, ״שקט ניהולי״.</li>
+</ul></div>
+<div class="card"><h3>פילוחים נוספים <span class="tag">שקפים 26–27</span></h3>
+<table>
+<tr><th>נחזיק יותר</th><th>נחזיק פחות</th></tr>
+<tr><td>קריטיות גבוהה · צריכה גבוהה · זמני אספקה ארוכים · מורכבות אספקה גבוהה</td><td>רגישות לפג תוקף · נפח גבוה</td></tr>
+</table>
+כשפילוחים סותרים (פריט <bdi dir="ltr">A</bdi> קריטי, פריט <bdi dir="ltr">C</bdi> רגיש לתפוגה) — נדרש שיקול דעת.</div>
+</div>
+
+<h2 id="mnt">ניהול אחזקה ועלויות <small>מצגת 7</small></h2>
+<div class="grid g2">
+<div class="card"><h3>מדדים <span class="tag">שקפים 9, 14–17</span></h3>
+<span class="f">A = MTBF / (MTBF + MTTR)</span>
+זמינות <bdi dir="ltr">A</bdi> — הסיכוי שהציוד מוכן לשימוש (אחוז היחידות או אחוז הזמן). אמינות <bdi dir="ltr">R</bdi> — הסיכוי לסיים פעולה של <bdi dir="ltr">t</bdi> שעות.<br>
+כמות ציוד נדרשת = הכמות שצריכה להיות זמינה ÷ <bdi dir="ltr">A</bdi>. מכשיר מוכן 180 מתוך 240 ימים ← <bdi dir="ltr">A = 0.75</bdi>; כדי שיהיו 120 זמינים: <bdi dir="ltr">120 / 0.75 = 160</bdi> מכשירים.</div>
+<div class="card"><h3>עלות מחזור חיים <span class="tag">שקפים 10–13</span></h3>
+<bdi dir="ltr">LCC</bdi> — הצטיידות + תפעול + אחזקה + הוצאה משירות לאורך כל החיים. ״הזול הוא יקר״: פיתוח/ייצור זול ← תפעול ואחזקה יקרים. מטוס קרב: השקעה 47%, תפעול ואחזקה (15 שנה) 53%. המטרה: <bdi dir="ltr">A</bdi> ו-<bdi dir="ltr">R</bdi> במינימום עלות — לרכוש חכם, לתחזק חכם, לדעת מתי להחליף.</div>
+<div class="card"><h3>גישות אחזקה <span class="tag">שקפים 18–25</span></h3>
+<table>
+<tr><th>גישה</th><th>מתי</th></tr>
+<tr><td><b>שבר</b> (״כיבוי שרפות״)</td><td><bdi dir="ltr">MTBF</bdi> גבוה, נזק זניח, הפעלה שוטפת יקרה, ציוד זול עם רזרבה</td></tr>
+<tr><td><b>מונעת</b> (״הקדמת רפואה למכה״)</td><td>מערכות חיוניות/בטיחותיות, סיכון כלכלי, הוראות יצרן, טיפול זול ביחס לנזק; תדירות לפי ניתוח סטטיסטי</td></tr>
+<tr><td><b>חזויה</b></td><td>אחרי התרעה ממערכת מעקב (תנודות, תרמוגרפיה) — טכנולוגיה יקרה ולומדת</td></tr>
+</table>
+מטרת העל: הקטנת עלויות אחזקה.</div>
+<div class="card"><h3>אופטימום, קרחון, סיווג <span class="tag">שקפים 26–31</span></h3>
+אין אחזקה מקסימלית אלא אופטימלית (סף טכנולוגי · פעילות סדירה · מינימום עלות/מקסימום רווח). עלייה ברמת האחזקה: השקעה ↑, נזק משבר ↓ — ולסך העלות מינימום (לא בהכרח בנקודת החיתוך).<br>
+<b>קרחון:</b> בתחילה רוב העלויות נסתרות (מלאי ביניים, פיצויים על פיגורים). <b>יזומות</b> (ניתוח סטטיסטי, אחזקה מונעת/חזויה) מול <b>כפויות</b> (השבתה, תיקון שבר, חומר שהתקלקל) — להגדיל יזום, להקטין כפוי.</div>
+</div>
+<div class="card"><h3>הדוגמה הפתורה <span class="tag">שקפים 32–39</span></h3>
+תקלת שבר — 12 שעות השבתה (2 זיהוי + 10 תיקון) × 1,000, 10 שעות טכנאי × 150, חומרים 800:<div class="ex"><bdi dir="ltr">12·1,000 + 10·150 + 800 = 14,300</bdi> ₪</div>טיפול מונע — 3 שעות השבתה, 3 שעות טכנאי, חומרים 250:<div class="ex"><bdi dir="ltr">3·1,000 + 3·150 + 250 = 3,700</bdi> ₪</div>
+<table>
+<tr><th>מדיניות</th><th>חישוב</th><th class="n">עלות שנתית</th><th class="n">שיפור</th><th class="n">השבתה (שעות)</th><th class="n">שיפור</th></tr>
+<tr><td>שבר בלבד</td><td>12 תקלות × 14,300</td><td class="n">171,600</td><td class="n">—</td><td class="n">144</td><td class="n">—</td></tr>
+<tr><td>מונעת</td><td>12 × 3,700 + 6 × 14,300</td><td class="n">130,200</td><td class="n">24%</td><td class="n">102</td><td class="n">29%</td></tr>
+<tr><td>חזויה</td><td>20,000 + 12,000 + 10 × 3,700 + 4 × 14,300</td><td class="n">126,200</td><td class="n">26%</td><td class="n">78</td><td class="n">46%</td></tr>
+</table>
+<div class="warn">בשקף 35 כתוב ״130,200 = 85,800 + 14,400״ — צריך להיות 44,400 (עלות הטיפולים המונעים בשנה). הסכום עצמו נכון.</div></div>
+
+<h2 id="rel">אמינות <small>מצגת 8</small></h2>
+<div class="grid g2">
+<div class="card"><h3>הגדרות <span class="tag">שקפים 2–12</span></h3>
+<span class="f">F(t) = P(T ≤ t) &nbsp;·&nbsp; R(t) = 1 − F(t)</span>
+<span class="f">MTBF = 1/λ &nbsp;·&nbsp; R(t) = e<sup>−t/MTBF</sup></span>
+המשתנה המקרי — הזמן בין תקלות. ככל שהמשימה ארוכה יותר, <bdi dir="ltr">R</bdi> יורדת. מנוע עם <bdi dir="ltr">MTBF = 200</bdi>:<div class="ex"><bdi dir="ltr">R(10) = 0.951 · R(50) = 0.788 · R(100) = 0.607 · R(200) = e<sup>−1</sup> = 0.37</bdi></div></div>
+<div class="card"><h3>טור ומקביל <span class="tag">שקפים 13–20</span></h3>
+<span class="f fr">טור: <bdi dir="ltr">R = R<sub>1</sub>·R<sub>2</sub>·…·R<sub>n</sub></bdi></span>
+<span class="f fr">מקביל: <bdi dir="ltr">R = 1 − (1−R<sub>1</sub>)(1−R<sub>2</sub>)…(1−R<sub>n</sub>)</bdi></span>
+<span class="f fr">של המערכת: <bdi dir="ltr">MTBF = t / ln(1/R)</bdi></span>
+רכב (טור, 10 שעות) — נמוכה מהרכיב החלש, ״צוואר הבקבוק״:<div class="ex"><bdi dir="ltr">R = 0.951·0.955·0.905·0.961·0.951 = 0.751 ; MTBF = 10/ln(1/0.751) = 35</bdi></div>מטוס (מקביל, 12 שעות):<div class="ex"><bdi dir="ltr">R = 1 − 0.058·0.077 = 0.9955</bdi> (שלושה מנועים: 0.9997)</div>
+<div class="warn">בשקף 19 כתוב 0.994 ובשקף 20 — 0.999; החישוב המדויק 0.9955 ו-0.9997. ה-<bdi dir="ltr">MTBF</bdi> בשקפים (1,994; 11,993) חושב מהערכים המעוגלים ורגיש מאוד לעיגול.</div></div>
+<div class="card"><h3>Stand-By <span class="tag">שקפים 21–23</span></h3>
+הרכיב המקבילי מתחיל לעבוד רק כשהראשי מושבת.
+<span class="f">R<sub>SB</sub> = Σ<sub>i=0…n−1</sub> (λt)<sup>i</sup>·e<sup>−λt</sup> / i!</span>
+4 רכיבים, כל אחד 0.7 ל-100 שעות:<div class="ex"><bdi dir="ltr">MTBF = 100/ln(1/0.7) = 280 ; λt = 0.357</bdi></div><div class="ex"><bdi dir="ltr">R<sub>SB</sub> = 0.7·(1 + 0.357 + 0.0636 + 0.0076) = 0.9995</bdi></div>בשקף 0.9999 — סכום של איברים מעוגלים. במקביל פעיל: <bdi dir="ltr">1 − 0.3<sup>4</sup> = 0.9919</bdi> — <bdi dir="ltr">S.B</bdi> אמין יותר.</div>
+<div class="card"><h3>1,000 הקבלים <span class="tag">שקפים 6–7</span></h3>
+השיעור המצטבר הוא אומדן של <bdi dir="ltr">F(t)</bdi> (שנה 5 — 67.5%, שנה 6 — 74.3%, שנה 8 — 83%, שנה 9 — 86.5%):
+<ul>
+<li>יחיה יותר מ-5 שנים: <bdi dir="ltr">1 − 0.675 = 32.5%</bdi></li>
+<li>ייכשלו בתוך 6 שנים: 74.3%</li>
+<li>מבין שנכשלו עד שנה 6 — חיו לפחות 5: <bdi dir="ltr">(0.743 − 0.675)/0.743 = 9.15%</bdi></li>
+<li>חיו לפחות 8 ונכשלו בשנה ה-9: <bdi dir="ltr">0.865 − 0.830 = 3.5%</bdi></li>
+</ul></div>
+</div>
+<div class="card"><h3>שיעורי הבית בשקף 24 — המערכת המשולבת, פתורה <span class="tag">חישוב שלנו · 100 שעות</span></h3>
+המבנה: 1 ← (2, 3, 4 במקביל) ← 5 ← (6, 7, 8 במקביל) ← (9, 10, 11 במקביל) ← 12.
+<table>
+<tr><th>בלוק</th><th class="n">1</th><th class="n">2–4</th><th class="n">5</th><th class="n">6–8</th><th class="n">9–11</th><th class="n">12</th><th class="n">מערכת</th></tr>
+<tr><th><bdi dir="ltr">R</bdi></th><td class="n">0.8187</td><td class="n">0.9847</td><td class="n">0.8669</td><td class="n">0.9684</td><td class="n">0.9391</td><td class="n">0.7165</td><td class="n"><b>0.4554</b></td></tr>
+</table>
+לדוגמה: <bdi dir="ltr">R<sub>2–4</sub> = 1 − (1 − e<sup>−100/350</sup>)<sup>3</sup> = 1 − 0.2485<sup>3</sup> = 0.9847</bdi>; <bdi dir="ltr">R<sub>6–8</sub> = 1 − 0.2835²·0.3935 = 0.9684</bdi>. הבלוקים בטור מוכפלים.</div>
+
+<h2 id="pm">תדירות אחזקה מונעת אופטימלית <small>מצגות 9–10</small></h2>
+<div class="grid g2">
+<div class="card"><h3>מינימום זמן השבתה <span class="tag">מצגת 9</span></h3>
+<span class="f">TDT = DTI + DTR = n/Ф + λ(n)/μ</span>
+<span class="f">dλ(n)/dn = −μ/Ф &nbsp;&nbsp;·&nbsp;&nbsp; λ(n) = f·e<sup>−n</sup> ⟹ n* = ln(f·Ф/μ)</span>
+<bdi dir="ltr">Ф</bdi> — קצב טיפולים מונעים אפשרי (<bdi dir="ltr">1/Ф</bdi> = משך טיפול); <bdi dir="ltr">μ</bdi> — קצב תיקונים אפשרי (<bdi dir="ltr">1/μ</bdi> = משך תיקון); <bdi dir="ltr">f</bdi> — תקלות בלי טיפולים מונעים כלל.<br>
+תיקון 12 שעות, טיפול 3 שעות, 200 שעות בחודש, 4 תקלות בלי טיפולים:<div class="ex"><bdi dir="ltr">Ф = 200/3 = 66.67 ; μ = 200/12 = 16.67 ; f = 4</bdi></div><div class="ex"><bdi dir="ltr">n* = ln(4·66.67/16.67) = ln(16) = 2.77 ; λ(n*) = 0.25</bdi></div><div class="ex"><bdi dir="ltr">TDT = 0.25·12 + 2.77·3 = 3 + 8.32 = 11.32</bdi> שעות בחודש (בלי טיפולים: 48)</div>
+<div class="warn">שקף 10: עם הנתונים <bdi dir="ltr">Ф = 300, μ = 30, f = 3</bdi> יוצא <bdi dir="ltr">ln(30) = 3.40</bdi> — ה-4.6 בשקף הוא <bdi dir="ltr">ln(100)</bdi>. שקף 12: בנוסחה כתוב 3 במקום <bdi dir="ltr">f = 4</bdi>, והתוצאה 2.77 נכונה.</div></div>
+<div class="card"><h3>מקסימום רווח <span class="tag">מצגת 10</span></h3>
+<span class="f">PR = P − P·n/Ф − P·λ(n)/μ − Ci·n/Ф − Cr·λ(n)/μ</span>
+<span class="f">n* = ln( f·Ф·(P + Cr) / (μ·(P + Ci)) )</span>
+<bdi dir="ltr">P</bdi> — רווח בתנאים אידיאליים (בלי השבתה); <bdi dir="ltr">Ci, Cr</bdi> — עלות ביקורת/תיקון ליחידת זמן.<br>
+דוגמה:<div class="ex"><bdi dir="ltr">P = 10,000, f = 2, Ф = 100, μ = 25, Ci = 75, Cr = 400</bdi></div><div class="ex"><bdi dir="ltr">n* = ln(8.25) = 2.11 ; PR ≈ 9,686.55</bdi> $ (בלי טיפולים: 9,168)</div>
+רגישות: <bdi dir="ltr">n*</bdi> גדל עם <bdi dir="ltr">f, Ф</bdi> ו-<bdi dir="ltr">Cr</bdi>; קטן עם <bdi dir="ltr">μ</bdi> ו-<bdi dir="ltr">Ci</bdi>.</div>
+</div>
+
+<h2 id="be">נקודת איזון וחלופות רכש <small>מצגת 11</small></h2>
+<div class="grid g2">
+<div class="card"><h3>נקודת איזון <span class="tag">שקפים 3–10</span></h3>
+<span class="f">P·Q = F + V·Q &nbsp;⟹&nbsp; Q* = F / (P − V)</span>
+<span class="f">Π(Q) = P·Q − (F + V·Q)</span>
+חטיף זיתים — העלות הקבועה לפי חלקו בהכנסות (2%):<div class="ex"><bdi dir="ltr">F = 0.02 · 1,082,120 = 21,642 ; V = 0.82 ; P = 7</bdi></div><div class="ex"><bdi dir="ltr">Q* = 21,642 / 6.18 = 3,502</bdi></div>ביקוש 3,800 — מימין לנקודת האיזון, באזור הרווח:<div class="ex"><bdi dir="ltr">Π(3,800) = 26,600 − 21,642 − 3,116 = 1,842</bdi></div></div>
+<div class="card"><h3>ניתוח רגישות <span class="tag">שקפים 11–24</span></h3>
+<table>
+<tr><th>תרחיש</th><th class="n"><bdi dir="ltr">Q*</bdi></th><th class="n">רווח</th></tr>
+<tr><td>מצב קיים</td><td class="n">3,502</td><td class="n">1,842</td></tr>
+<tr><td>מחיר −7% (6.51)</td><td class="n">3,803</td><td class="n">−20</td></tr>
+<tr><td>עלות קבועה +5%</td><td class="n">3,677</td><td class="n">760</td></tr>
+<tr><td>חומרי גלם +8%, שכר +5% (<bdi dir="ltr">V = 0.871</bdi>)</td><td class="n">3,531</td><td class="n">1,648</td></tr>
+</table>
+מסקנה: אפילו הורדת מחיר קטנה יוצרת הפסד — להיזהר בהורדת מחירים.</div>
+<div class="card"><h3>חלופות השקעה <span class="tag">שקפים 25–27</span></h3>
+<span class="f">F<sub>1</sub> + V<sub>1</sub>·Q = F<sub>2</sub> + V<sub>2</sub>·Q &nbsp;⟹&nbsp; Q* = (F<sub>1</sub> − F<sub>2</sub>) / (V<sub>2</sub> − V<sub>1</sub>)</span>
+<div class="ex"><bdi dir="ltr">600,000 + 25Q = 450,000 + 32Q ⟹ Q* = 150,000/7 = 21,429</bdi></div>לאורך 5 שנים נדרשות 25,000 יחידות — יותר מ-21,429 ← חלופה א׳ (השקעה גבוהה, עלות יחידה נמוכה). משווים לכמות <b>של כל הפרויקט</b>.</div>
 </div>
 
 <h2 id="s1">שלמה — מבנה שרשרת האספקה ומטרותיה <small>שא-1, שא-2, שא-7, שא-8</small></h2>

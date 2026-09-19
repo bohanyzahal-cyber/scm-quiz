@@ -80,6 +80,8 @@ header .sub{color:var(--muted);font-size:13.5px;margin-bottom:16px;}
 .bar{height:7px;background:var(--chipBg);border-radius:999px;overflow:hidden;margin-bottom:18px;}
 .bar>i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s;}
 .qmeta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
+/* שם נושא (למשל ״ניהול מלאי ו-EOQ״) מבודד — כדי שהמספר שאחריו לא יידבק ל-EOQ */
+.iso{unicode-bidi:isolate;}
 .pill{font-size:11px;padding:3px 9px;border-radius:999px;background:var(--surface2);color:var(--muted);}
 .qtext{font-size:17.5px;font-weight:600;margin-bottom:15px;line-height:1.6;}
 /* טבלאות נתונים בתוך שאלות חישוב */
@@ -88,6 +90,8 @@ header .sub{color:var(--muted);font-size:13.5px;margin-bottom:16px;}
 .qtext td,.qtext th,.expl td,.expl th,.rev td,.rev th,.pq td,.pq th{border:1px solid var(--borderS);
   padding:3px 11px;text-align:center;}
 .qtext th,.expl th,.rev th,.pq th{background:var(--surface2);font-weight:650;}
+/* טבלה רחבה (למשל 11 עמודות) נגללת בתוך הכרטיס, ולא מרחיבה את כל העמוד */
+.qtext table,.expl table,.rev table{display:block;max-width:100%;overflow-x:auto;}
 /* נוסחאות בתוך טקסט עברי: יחידה אחת משמאל לימין, שאינה נשברת באמצע בין שורות
    מימין לשמאל. אם הנוסחה ארוכה משורה — היא נשברת בתוך עצמה, עדיין משמאל לימין. */
 .qtext bdi,.expl bdi,.rev bdi,.pq bdi{display:inline-block;direction:ltr;unicode-bidi:isolate;max-width:100%;}
@@ -325,7 +329,7 @@ function setup(){
   row3.appendChild(E("span",{"class":"lbl"},""));
   TOPICS.forEach(function(t){
     var on=sel.topics.indexOf(t)>=0;
-    var b=E("button",{"class":"chip"+(on?" active":"")},t+" <small>"+countBy("t",t)+"</small>");
+    var b=E("button",{"class":"chip"+(on?" active":"")},"<span class=\"iso\">"+t+"</span> <small>"+countBy("t",t)+"</small>");
     b.onclick=function(){
       var i=sel.topics.indexOf(t);
       if(i>=0)sel.topics.splice(i,1);else sel.topics.push(t);
@@ -410,7 +414,7 @@ function printSheet(withAnswers){
         arr.length+" שאלות · "+(SCOPE[sel.src]?SCOPE[sel.src].name:sel.src)+
         " · "+(withAnswers?"עם תשובות והסברים":"ללא תשובות")+"</div></div>";
   arr.forEach(function(q,i){
-    h+='<div class="pq"><div class="pt">'+q.t+(isCalc(q)?' · 🧮 חישוב':'')+'</div>'+
+    h+='<div class="pq"><div class="pt"><span class="iso">'+q.t+'</span>'+(isCalc(q)?' · 🧮 חישוב':'')+'</div>'+
        '<div><span class="pn">'+(i+1)+'.</span> '+q.q+'</div>';
     q.o.forEach(function(o,k){ h+='<div class="po">'+LET[k]+". "+o+"</div>"; });
     if(withAnswers)
@@ -430,7 +434,7 @@ function bar(frac){
 }
 function metaRow(q){
   var r=E("div",{"class":"qmeta"});
-  r.innerHTML='<span class="pill">'+q.t+'</span>'+
+  r.innerHTML='<span class="pill"><span class="iso">'+q.t+'</span></span>'+
     '<span class="pill" style="background:'+srcBg(q.s)+';color:'+srcFg(q.s)+'">'+((SRC_META[q.s]||{}).full||q.s)+'</span>'+
     (isCalc(q)?'<span class="pill" style="background:var(--warnBg);color:var(--warnTx)">🧮 חישוב — מחשבון</span>':'');
   return r;
@@ -660,7 +664,7 @@ function results(sc,total,wr,onAgain,onRetryWrong,detail,auto){
     wr.forEach(function(q){byTopic[q.t]=(byTopic[q.t]||0)+1;});
     var ul=E("div",{"class":"toolbar"});
     Object.keys(byTopic).forEach(function(t){
-      ul.appendChild(E("span",{"class":"pill"},t+" — "+byTopic[t]+" שגיאות"));
+      ul.appendChild(E("span",{"class":"pill"},"<span class=\"iso\">"+t+"</span> — "+byTopic[t]+" שגיאות"));
     });
     d2.appendChild(ul);
     app.appendChild(d2);

@@ -57,6 +57,51 @@ for _ in range(need):
     k = rng.choice(cand); pos.append(k); counts[k] += 1
 rng.shuffle(pos)
 
+# ---- בידוד רצפים לטיניים/יווניים (bidi) ----
+# בטקסט עברי, מספר שבא אחרי אות לטינית/יוונית ״נבלע״ ברצף משמאל לימין:
+# ״ו-μ; 12.50 — בלי ln״ מוצג כ״ו-12.50 ;μ״, ו״1/Ф״ בתחילת אפשרות מוצג כ״Ф/1״.
+# לכן כל רצף שמתחיל באות לטינית/יוונית (כולל קידומת כמו ״1/״) נעטף ב-<bdi dir='ltr'>.
+# תוכן שכבר בתוך <bdi> ותגיות HTML אינם נוגעים.
+import re
+_SEG = re.compile(r"(<bdi[^>]*>.*?</bdi>|<[^>]+>)", re.S)
+_LET = "A-Za-zͰ-ϿЀ-ӿ"
+_RUN = re.compile(r"(?:\d+(?:[.,]\d+)?(?:\s*[/·*]\s*)?)?[" + _LET + "√Σ∑Π]"   # כולל ״2.6M״ ו״1/Ф״
+                  r"[" + _LET + r"0-9 =+−\-·/*^()\[\].,%²³⁴⁰¹⌈⌉⌊⌋√≈<>≤≥_∑Σ]*")
+
+def _trim(r):
+    while True:
+        r0 = r
+        r = r.rstrip(" .,;:−-([=+·/^<>≈≤≥")       # לא לסיים ברצף באופרטור (אבל * של Q* נשאר)
+        if r.endswith(")") and r.count(")") > r.count("("):
+            r = r[:-1]
+        if r.endswith("]") and r.count("]") > r.count("["):
+            r = r[:-1]
+        if r == r0:
+            return r
+
+def iso(text):
+    parts = _SEG.split(text)
+    for k in range(0, len(parts), 2):          # רק קטעי טקסט רגיל (לא תגיות ולא bdi קיים)
+        seg, out, pos = parts[k], [], 0
+        for m in _RUN.finditer(seg):
+            r = _trim(m.group(0))
+            if not r:
+                continue
+            out.append(seg[pos:m.start()])
+            out.append("<bdi dir='ltr'>" + r + "</bdi>")
+            pos = m.start() + len(r)
+        out.append(seg[pos:])
+        parts[k] = "".join(out)
+    # סוגריים שעוטפים רצף מבודד — בתוך הבידוד, כדי שלא יישברו לשורה נפרדת: (<bdi>L=5</bdi>) ← <bdi>(L=5)</bdi>
+    return re.sub(r"\(<bdi dir='ltr'>([^<]*)</bdi>\)", lambda m: "<bdi dir='ltr'>(" + m.group(1) + ")</bdi>", "".join(parts))
+
+if os.environ.get("NOISO"):                  # להשוואה מול הפלט הישן
+    iso = lambda s: s
+
+def vlen(s):
+    """אורך נראה — בלי תגיות HTML (כדי שבדיקת האורך לא תושפע מ-bdi)."""
+    return len(re.sub(r"<[^>]+>", "", s))
+
 lines, flags = [], []
 for i, it in enumerate(Q):
     ds = list(it["d"]); rng.shuffle(ds)
@@ -64,10 +109,10 @@ for i, it in enumerate(Q):
     opts = ds[:c] + [it["a"]] + ds[c:]
     s = it.get("s", S)
     line = "{t:%s,s:%s,q:%s,o:[%s],c:%d,e:%s%s}" % (
-        js(T), js(s), js(it["q"]), ",".join(js(o) for o in opts), c, js(it["e"]),
+        js(T), js(s), js(iso(it["q"])), ",".join(js(iso(o)) for o in opts), c, js(iso(it["e"])),
         (",k:" + js(it["k"])) if it.get("k") else "")
     lines.append(line)
-    la, ld = len(it["a"]), [len(x) for x in it["d"]]
+    la, ld = vlen(it["a"]), [vlen(x) for x in it["d"]]
     tag = "L" if la > max(ld) + 2 else ("S" if la < min(ld) - 2 else "")
     flags.append(tag)
     if tag:

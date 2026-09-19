@@ -121,7 +121,7 @@ BANK.forEach((q,i)=>{
   if((q.o||[]).some(o=>POS.test(o)))      err.push(at+' — מסיח תלוי-מיקום');
   /* כפילות ניסוח: נוצרת כשמאריכים מסיח בטקסט שכבר מופיע בסופו. */
   (q.o||[]).forEach((o)=>{
-    const w=String(o).split(/\s+/);
+    const w=String(o).replace(/<[^>]+>/g,'').split(/\s+/);   /* בלי תגיות bdi */
     for(let k=0;k+1<w.length;k++){
       if(w[k].length>=4 && w[k]===w[k+1]) { err.push(at+' — מילה כפולה ברצף: "'+w[k]+'"'); break; }
       if(k+3<w.length && w[k].length>=4 && w[k]===w[k+3] && w[k+1]===w[k+4]) {
@@ -187,7 +187,8 @@ const n=BANK.length, rank=[0,0,0,0];
 let long=0, short=0, outlierHit=0;
 const outliers=[];
 BANK.forEach((q,qi)=>{
-  const L=q.o.map(o=>o.length), max=Math.max(...L), min=Math.min(...L);
+  /* אורך נראה — בלי תגיות (bdi וכד') */
+  const L=q.o.map(o=>o.replace(/<[^>]+>/g,'').length), max=Math.max(...L), min=Math.min(...L);
   if(L.indexOf(max)===q.c) long++;
   if(L.indexOf(min)===q.c) short++;
   rank[L.map((l,i)=>[l,i]).sort((a,b)=>b[0]-a[0]).map(x=>x[1]).indexOf(q.c)]++;
