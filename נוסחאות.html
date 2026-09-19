@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>דף נוסחאות ומושגים — ניהול שרשרת ההספקה</title>
+<style>
+:root{--bg:#f5f7f6;--surface:#fff;--text:#1c2321;--muted:#66706d;--border:#dfe5e3;--accent:#1f6f8b;--accentSoft:#e3f0f5;
+  --n:#0b4f9e;--warnBg:#faeeda;--warnTx:#854f0b;--okBg:#e6f4ea;--okTx:#1a6b1a;--s2:#eef2f1;}
+@media (prefers-color-scheme:dark){:root{--bg:#181c1b;--surface:#212625;--text:#e9ecea;--muted:#9ea7a4;--border:#333b39;
+  --accent:#6fb7d3;--accentSoft:#1c3441;--n:#8fc1ff;--warnBg:#4a2b06;--warnTx:#fac775;--okBg:#16331f;--okTx:#7fd49a;--s2:#2b3130;}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Segoe UI',Arial,sans-serif;line-height:1.55;font-size:14.5px}
+.wrap{max-width:900px;margin:0 auto;padding:22px 20px 60px}
+h1{font-size:23px;margin:0 0 4px;font-weight:650}
+.sub{color:var(--muted);font-size:13.5px;margin-bottom:14px}
+.toc{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.toc a{text-decoration:none;color:var(--text);background:var(--s2);border:1px solid var(--border);border-radius:999px;padding:5px 12px;font-size:12.5px}
+.toc a:hover{border-color:var(--accent)}
+h2{font-size:18px;margin:26px 0 10px;padding-bottom:5px;border-bottom:2px solid var(--accent);color:var(--accent)}
+h2 small{font-weight:400;color:var(--muted);font-size:12.5px;margin-right:8px}
+h3{font-size:15px;margin:16px 0 6px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:12px;break-inside:avoid}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.f{font-family:'Cambria Math','Times New Roman',serif;font-size:16px;direction:ltr;text-align:left;background:var(--s2);border-radius:8px;padding:7px 12px;margin:6px 0;display:block;unicode-bidi:isolate}
+.f i{font-style:italic}
+.f sub{font-size:11px}
+.note{background:var(--accentSoft);border-right:3px solid var(--accent);padding:8px 12px;border-radius:0 8px 8px 0;margin:8px 0;font-size:13.5px}
+.warn{background:var(--warnBg);border-right:3px solid var(--warnTx);padding:8px 12px;border-radius:0 8px 8px 0;margin:8px 0;font-size:13.5px}
+.warn b{color:var(--warnTx)}
+table{border-collapse:collapse;width:100%;margin:8px 0;font-size:13.5px}
+th,td{border:1px solid var(--border);padding:4px 9px;text-align:right;vertical-align:top}
+th{background:var(--s2);font-weight:650}
+td.n,th.n{text-align:center;font-variant-numeric:tabular-nums;direction:ltr}
+.k{color:var(--n);font-weight:650}
+ul{margin:4px 0;padding-right:20px}
+li{margin:2px 0}
+.tag{display:inline-block;font-size:11px;padding:1px 8px;border-radius:999px;background:var(--s2);color:var(--muted);margin-right:4px}
+.back{position:fixed;top:10px;left:10px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px 11px;font-size:12.5px;text-decoration:none;color:var(--text)}
+.two{columns:2;column-gap:20px}
+.two .card{display:inline-block;width:100%}
+@media (max-width:640px){.two{columns:1}}
+@media print{
+  @page{size:A4;margin:10mm}
+  body{background:#fff;color:#000;font-size:10.5pt}
+  .wrap{max-width:none;padding:0}
+  .back,.toc{display:none}
+  .card{border-color:#bbb;page-break-inside:avoid}
+  h2{page-break-after:avoid}
+  .f{background:#f0f0f0}
+}
+</style>
+</head>
+<body>
+<a class="back" href="index.html">← לבוחן התרגול</a>
+<div class="wrap">
+<h1>דף נוסחאות ומושגים — ניהול שרשרת ההספקה</h1>
+<div class="sub">חלק א: המודלים הכמותיים של ד"ר ניצן סוויד, עם דוגמה פתורה. חלק ב: המודלים של שלמה ארליך בעמוד אחד. מספרי השקפים לפי המצגות באתר הקורס.</div>
+<div class="toc">
+  <a href="#fc">חיזוי — נוסחאות</a><a href="#ex">חיזוי — דוגמת הכיתה פתורה</a><a href="#err">מדדי דיוק ובחירת שיטה</a>
+  <a href="#s1">מבנה השרשרת ומטרותיה</a><a href="#s2">ניהול חומר ומלאי</a><a href="#s3">רכש</a><a href="#s4">ייצור ומיקור חוץ</a>
+  <a href="#s5">הזמנות ולוגיסטיקה</a><a href="#s7">אסטרטגיה וזמישות</a><a href="#s8">ארגז הכלים</a>
+</div>
+
+<div class="warn"><b>הדף חלקי בשלב זה:</b> נושאי ניצן שעדיין לא נכללו — חיזוי עונתי, רמות מלאי ו-EOQ, מלאי ביטחון ונקודת הזמנה, פארטו, אחזקה, אמינות וזמינות, תדירות טיפולים וחלופות רכש — יתווספו אחרי קריאת מצגות 3–11.</div>
+
+<h2 id="fc">חיזוי — הנוסחאות <small>מצגת 2 · הרצאות 28.7, 4.8, 11.8</small></h2>
+<div class="grid">
+<div class="card"><h3>מוסכמות הקורס</h3>
+<ul>
+<li>ציר הזמן: <b>מס"ד תקופות</b> t = 1…n (לא שנים). חוזים לתקופה n+1.</li>
+<li>X<sub>t</sub> = הביקוש בפועל, F<sub>t</sub> = התחזית לתקופה t.</li>
+<li>מחשבים F<sub>t</sub> <b>גם לתקופות העבר</b> כדי למדוד סטיות (MAD/MSE) ולבחור שיטה.</li>
+<li>חמש השיטות שנלמדו: רגרסיה ליניארית, ממוצע נע N=2 / N=3, ממוצע נע משוקלל N=2 / N=3. החלקה מעריכית הוצגה במצגת בלבד.</li>
+</ul></div>
+<div class="card"><h3>הגישה הנאיבית <span class="tag">שקף 7</span></h3>
+<span class="f">F<sub>t+1</sub> = X<sub>t</sub></span>
+התחזית לתקופה הבאה = הביצוע בתקופה שחלפה.</div>
+<div class="card"><h3>ממוצע נע פשוט (MA) <span class="tag">שקפים 21–23</span></h3>
+<span class="f">F<sub>t</sub> = (X<sub>t−1</sub> + … + X<sub>t−N</sub>) / N</span>
+אין תחזית ל-N התקופות הראשונות ("מוחקים" אותן). מתאים לביקוש יציב ללא מגמה/עונתיות; חיסרון: מפגר אחרי המגמה.</div>
+<div class="card"><h3>ממוצע נע משוקלל (WMA) <span class="tag">שקפים 24–26</span></h3>
+<span class="f">F<sub>t</sub> = Σ w<sub>i</sub>·X<sub>i</sub> / Σ w<sub>i</sub></span>
+משקל גבוה לתקופה הדומה ביותר לתקופה החזויה (בדרך כלל האחרונה). <b>המוסכמה של ניצן (שקפים 25–26, הרצאות 28.7 ו-11.8):</b> מוסיפים עמודת W<sub>t</sub> <b>צמודה לתקופות</b> — לתקופה האחרונה 1, ובכל תקופה אחורה מפחיתים 0.1 (ליניארית: 1, 0.9, 0.8, 0.7…) או 0.15 (1, 0.85, 0.7…). כל תחזית = סכום (ביקוש × משקל) של N התקופות שבחלון, חלקי סכום המשקולות <b>של אותו חלון</b>. לכן התחזית לתקופה הבאה משתמשת במשקולות 1 ו-0.9 (N=2, סכום 1.9) או 1, 0.9 ו-0.8 (N=3, סכום 2.7), ותחזיות העבר — במשקולות הנמוכות יותר של שנותיהן. סכום המשקולות לא חייב להיות 1.</div>
+<div class="card"><h3>רגרסיה ליניארית <span class="tag">שקפים 14–15, 20</span></h3>
+<span class="f">Y = a + b·X</span>
+<span class="f">b = (nΣxy − Σx·Σy) / (nΣx² − (Σx)²)</span>
+<span class="f">a = ȳ − b·x̄</span>
+<span class="f">R = (nΣxy − Σx·Σy) / √[(nΣx² − (Σx)²)(nΣy² − (Σy)²)]</span>
+קו הרגרסיה = הקו עם השגיאה המצטברת הקטנה ביותר. אקסל: SLOPE, INTERCEPT, CORREL. <b>R ולא R²</b>: −1 ≤ R ≤ 1; קרוב ל-1 קשר חזק וחיובי, קרוב ל-−1 חזק ושלילי, סביב 0 חלש.</div>
+<div class="card"><h3>החלקה מעריכית <span class="tag">שקפים 27–28</span></h3>
+<span class="f">F<sub>t+1</sub> = α·X<sub>t</sub> + (1−α)·F<sub>t</sub></span>
+0 &lt; α &lt; 1: משקל למכירות האחרונות; (1−α) לתחזית הקודמת. חישוב פשוט, שיטה רגישה. אם אין תחזית התחלתית נהוג F<sub>1</sub> = X<sub>1</sub>.</div>
+</div>
+
+<h2 id="err">מדדי דיוק ובחירת שיטה <small>מצגת 2 · שקפים 29–34</small></h2>
+<div class="grid">
+<div class="card"><h3>MAD — ממוצע הסטיות בערך מוחלט</h3>
+<span class="f">MAD = Σ|X<sub>t</sub> − F<sub>t</sub>| / n</span></div>
+<div class="card"><h3>MSE — ממוצע ריבועי הסטיות</h3>
+<span class="f">MSE = Σ(X<sub>t</sub> − F<sub>t</sub>)² / n</span>
+מעניש סטיות גדולות יותר מ-MAD.</div>
+<div class="card"><h3>MRD / MAPE — סטייה יחסית באחוזים</h3>
+<span class="f">MRD = Σ(|X<sub>t</sub> − F<sub>t</sub>| / X<sub>t</sub>) / n</span>
+במצגת, אך ניצן אמר להתעלם ממנו במטלה ("תתעלמו מה-MAPE").</div>
+</div>
+<div class="note"><b>n</b> = מספר התקופות שיש להן תחזית בפועל (ב-MA N=3 על 7 תקופות: n = 4). <b>בחירת השיטה:</b> מריצים את הנתונים על כמה מודלים, מחשבים את השגיאה בכל אחד, בוחרים קריטריון (MAD או MSE), ומאמצים את המודל שמביא את הקריטריון <b>למינימום</b> (שקף 33). בקרת תחזית: בוחנים ומעדכנים את המודל כל הזמן — בעיות דיוק נובעות ממודל לא מתאים או מהשפעות חיצוניות (שקפים 30–31).</div>
+
+<h2 id="ex">דוגמת הכיתה פתורה <small>מצגת 2 · שקפים 19–34 — גיוס חרדים לצה"ל 2013–2019, חיזוי 2020</small></h2>
+<div class="card">
+<table>
+<tr><th>שנה</th><th class="n">2013</th><th class="n">2014</th><th class="n">2015</th><th class="n">2016</th><th class="n">2017</th><th class="n">2018</th><th class="n">2019</th><th class="n">2020</th></tr>
+<tr><th>מס"ד t</th><td class="n">1</td><td class="n">2</td><td class="n">3</td><td class="n">4</td><td class="n">5</td><td class="n">6</td><td class="n">7</td><td class="n">8</td></tr>
+<tr><th>ביקוש X<sub>t</sub></th><td class="n">1282</td><td class="n">1447</td><td class="n">1972</td><td class="n">2280</td><td class="n">2475</td><td class="n">2850</td><td class="n">3070</td><td class="n">?</td></tr>
+<tr><th>רגרסיה F<sub>t</sub></th><td class="n">1267.3</td><td class="n">1577.1</td><td class="n">1886.8</td><td class="n">2196.6</td><td class="n">2506.3</td><td class="n">2816.1</td><td class="n">3125.8</td><td class="n"><b>3435.6</b></td></tr>
+<tr><th>MA N=2</th><td class="n">—</td><td class="n">—</td><td class="n">1364.5</td><td class="n">1709.5</td><td class="n">2126.0</td><td class="n">2377.5</td><td class="n">2662.5</td><td class="n"><b>2960.0</b></td></tr>
+<tr><th>MA N=3</th><td class="n">—</td><td class="n">—</td><td class="n">—</td><td class="n">1567.0</td><td class="n">1899.7</td><td class="n">2242.3</td><td class="n">2535.0</td><td class="n"><b>2798.3</b></td></tr>
+<tr><th>משקל W<sub>t</sub> (10%)</th><td class="n">0.4</td><td class="n">0.5</td><td class="n">0.6</td><td class="n">0.7</td><td class="n">0.8</td><td class="n">0.9</td><td class="n">1</td><td class="n"></td></tr>
+<tr><th>WMA N=2</th><td class="n">—</td><td class="n">—</td><td class="n">1373.7</td><td class="n">1733.4</td><td class="n">2137.9</td><td class="n">2384.0</td><td class="n">2673.5</td><td class="n"><b>2965.8</b></td></tr>
+<tr><th>WMA N=3</th><td class="n">—</td><td class="n">—</td><td class="n">—</td><td class="n">1613.0</td><td class="n">1945.9</td><td class="n">2266.3</td><td class="n">2558.8</td><td class="n"><b>2820.4</b></td></tr>
+</table>
+<h3>רגרסיה — החישוב המלא</h3>
+n = 7, Σx = 28, Σy = 15,376, Σxy = 70,145, Σx² = 140, Σy² = 36,553,882.<br>
+<span class="f">b = (7·70,145 − 28·15,376) / (7·140 − 28²) = (491,015 − 430,528) / (980 − 784) = 60,487 / 196 = 309.75</span>
+<span class="f">a = 15,376/7 − 309.75·(28/7) = 2,196.57 − 1,239.00 = 957.57</span>
+<span class="f">F<sub>8</sub> = 957.57 + 309.75·8 = 3,435.57 ≈ 3,436</span>
+<span class="f">R = 60,487 / √(196 · (7·36,553,882 − 15,376²)) = 60,487 / √(196 · 19,455,798) = 0.993</span>
+<h3>המדדים לכל שיטה (על התקופות שיש להן תחזית)</h3>
+<table>
+<tr><th>שיטה</th><th class="n">n</th><th class="n">MAD</th><th class="n">MSE</th><th class="n">תחזית 2020</th></tr>
+<tr><td>רגרסיה ליניארית</td><td class="n">7</td><td class="n"><b>62.06</b></td><td class="n"><b>5,228</b></td><td class="n"><b>3,436</b></td></tr>
+<tr><td>ממוצע נע N=2</td><td class="n">5</td><td class="n">481.40</td><td class="n">241,128</td><td class="n">2,960</td></tr>
+<tr><td>ממוצע נע N=3</td><td class="n">4</td><td class="n">607.75</td><td class="n">373,715</td><td class="n">2,798</td></tr>
+<tr><td>ממוצע נע משוקלל N=2</td><td class="n">5</td><td class="n">468.92</td><td class="n">228,966</td><td class="n">2,966</td></tr>
+<tr><td>ממוצע נע משוקלל N=3</td><td class="n">4</td><td class="n">572.75</td><td class="n">331,722</td><td class="n">2,820</td></tr>
+</table>
+<div class="note">הרגרסיה מקבלת את המדדים הנמוכים ביותר (MAD 62.06, MSE 5,228 — כמו בשקף 34) ולכן היא השיטה הנבחרת, והתחזית ל-2020 היא <b>3,436</b>. הממוצעים הנעים מפגרים אחרי המגמה העולה — לכן הסטיות שלהם גדולות. שימו לב: ה-MAD של הממוצעים הנעים מחושב רק על התקופות שיש להן תחזית (5 או 4), לא על 7.<br>
+<b>דוגמה לחישוב אחד (WMA N=3, שנת 2016):</b> F = (1282×0.4 + 1447×0.5 + 1972×0.6) / (0.4+0.5+0.6) = 2419.5 / 1.5 = 1613 — בדיוק כמו בשקף 26.<br>
+<b>הערה על שקף 34:</b> שורת "ממוצע נע משוקלל N=2" בטבלת הסיכום בשקף (MAD 2639.755, MSE 12,754,913) לקוחה משקף 25, שחושב בטעות על סדרת נתונים אחרת (29,195; 16,189; …). על נתוני הגיוס הערכים הנכונים הם אלה שבטבלה כאן — והמסקנה לא משתנה: הרגרסיה היא הטובה ביותר.</div>
+</div>
+
+<h2 id="s1">שלמה — מבנה שרשרת האספקה ומטרותיה <small>שא-1, שא-2, שא-7, שא-8</small></h2>
+<div class="two">
+<div class="card"><h3>שלושת תהליכי האב <span class="tag">שא-1 שקף 4</span></h3>
+<ul><li><b>פיתוח</b> — מצורך שוק ← למוצר בר-מכירה</li><li><b>אספקה</b> — מדרישת לקוח ← ללקוח משתמש</li><li><b>שירות</b> — מפניית לקוח ← ללקוח מרוצה</li></ul>
+קלט ← תהליך ← פלט, ומעגל <b>PDCA</b> (שקף 3). מבנה ארגוני תומך תהליך אב; "שבירת" התהליך לתחומי אחריות ברורים; 80% מהתהליכים; יחידות ייעודיות לתהליכים ייעודיים; מבנה היחידה לפי מבנה לקוחותיה (שקף 8).</div>
+<div class="card"><h3>חמשת הבלוקים של השרשרת הפנים-ארגונית <span class="tag">שא-1 שקף 11</span></h3>
+<ul><li><b>ניהול חומר</b> — תחזיות, MRP, מלאי</li><li><b>רכש</b> — מיקור Sourcing, רכש Purchasing, קידום רכש</li><li><b>ייצור</b> — ייצור עצמי, קבלני משנה</li><li><b>ניהול הזמנות</b> — קידום משלוחים</li><li><b>לוגיסטיקה</b> — מחסנים, שילוח והפצה</li></ul>
+חוץ-ארגונית: Source → Vendor ← הארגון ← לקוח ← End User (שא-2 שקף 4).</div>
+<div class="card"><h3>ייעוד, האתגר העיקרי ועיסוקי הליבה <span class="tag">שא-1 שקפים 16–17 · שא-2 שקף 7</span></h3>
+<b>ייעוד:</b> הבטחת אספקות ללקוחות — בזמן, באיכות גבוהה, בעלות מיטבית, בזמישות.<br>
+<b>האתגר העיקרי:</b> הבטחת אספקות תוך שמירה על זמישות תפעולית ורמת מלאי נמוכה (ובשא-8: ואיכות גבוהה). "הגדלת המלאי אינה הפתרון".<br>
+<b>עיסוקי ליבה:</b> ניהול הזמנות ואספקות; ניהול חומר ותחזיות; ניהול מלאי; ניהול ספקים ומיקור; הורדת עלויות; לוגיסטיקה; NPI — מעבר מפיתוח לייצור; שיפור תהליכים ובקרת ביצועים.</div>
+<div class="card"><h3>עץ ה-KPI <span class="tag">שא-1 שקף 18</span></h3>
+<b>Customer Voice — Deliver to Customers</b>, ותחתיו: Quality (DOA, RMA, Customer Complaints, Shipment Quality) · Inventory (Level, Turns, Dead/Slow) · Forecast Accuracy (Coverage, Undershoot, Overshoot) · Lead Time (Customer Order, Product) · On Time Delivery (Average day Delay, Number of delays) · Revenue Shortages (Delayed orders, Lost Orders) · Operational Cost (COGS, Freight, Overhead) · Cost Reduction (COGS, Expenses, # of vendors) · Logistics Cost per COGS (# of shipments).</div>
+<div class="card"><h3>חמש מטרות שרשרת האספקה <span class="tag">שא-7 שקף 10 · שא-8 שקף 13</span></h3>
+<ol style="padding-right:20px;margin:4px 0"><li>יצירת ערך מוסף לארגון</li><li>Supply Chain Value</li><li>Supply Chain Profitability — ההפרש בין ההכנסות מהלקוח לסך עלויות השרשרת</li><li>Supply Chain Value Proposition</li><li>מעבר ממרכז עלות (Cost Center) למרכז רווח (Profit Center)</li></ol></div>
+<div class="card"><h3>שרשרת פיתוח המוצר — 7 שלבים <span class="tag">שא-1 שקף 9</span></h3>
+פיתוח עסקי (דרישה) ← מו"פ (אב טיפוס) ← הנדסה (תיק מוצר, תיק ייצור, DFx) ← תפעול (מוצרים/שירותים) ← שיווק יוצא (יצירת צורך) ← מכירות (רכישה) ← שירות (לקוח מרוצה). המערך התפעולי: הנדסה, שרשרת אספקה, שירות, רכש, אדמיניסטרציה (שקף 10).</div>
+</div>
+
+<h2 id="s2">שלמה — ניהול חומר ומלאי <small>שא-2</small></h2>
+<div class="two">
+<div class="card"><h3>תהליך ה-MRP <span class="tag">שקף 9</span></h3>
+הזמנות + תחזיות ← <b>MPS</b> ← פיצוץ <b>BOM</b> ← דרישות ברוטו ← מול מלאי והזמנות פתוחות ← <b>דרישות נטו</b> ← הזמנות רכש (PO) ופקודות עבודה (קפ"ע).</div>
+<div class="card"><h3>סוגי מלאי <span class="tag">שקף 12</span></h3>
+<b>VMI</b> — מלאי מנוהל ספק, זמין לשימוש, קיימת מחויבות · <b>חו"ג</b> — זמינות הייצור, אי-תלות בספקים · <b>WIP</b> — שטף הייצור, אי-תלות בין תחנות · <b>תוצ"ג</b> — זמינות האספקות, אי-תלות בייצור · <b>קונסיגנציה</b> — מלאי אצל הלקוח, הלקוח אינו מחויב · <b>MRB</b> — תקולים שחזרו מלקוחות · <b>RTV</b> — בתהליך תיקון · <b>מלאי שירות</b>.<br>
+עץ המלאי (שקף 13): תפעולי (לקוחות, תוצ"ג, חו"ג ו-WIP, שירות, MRB, RTV, Refurbished) מול לא-תפעולי (איטי/מת, פיתוח והנדסה, רכוש קבוע).</div>
+<div class="card"><h3>מדיניות מלאי — ABC <span class="tag">שקף 17</span></h3>
+<table><tr><th>קבוצה</th><th class="n">מהערך</th><th class="n">מהכמות</th><th>מדיניות</th></tr>
+<tr><td class="k">A</td><td class="n">80%</td><td class="n">10%</td><td>ניהול ובקרה רציפה, EOQ / MRP</td></tr>
+<tr><td class="k">B</td><td class="n">15%</td><td class="n">30%</td><td>ביניים</td></tr>
+<tr><td class="k">C</td><td class="n">5%</td><td class="n">60%</td><td>מנת מלאי לתקופה ארוכה</td></tr></table>
+פרמטרים: ABC, עלות הפריט, ביקוש והתפלגותו, ערך החוסר, זמינות, זמני אספקה והתפלגותם, מקורות תחליפיים; מלאי ביטחון ומועד ההזמנה.</div>
+<div class="card"><h3>מטריצת גמישות <span class="tag">שקף 15</span></h3>
+<table><tr><th></th><th class="n">חודש נוכחי</th><th class="n">+1</th><th class="n">+2</th><th class="n">+3</th><th class="n">מעל 3</th></tr>
+<tr><td>הגדלה</td><td class="n">אין שינוי</td><td class="n">+10%</td><td class="n">+20%</td><td class="n">+30%</td><td class="n">ללא מחויבות</td></tr>
+<tr><td>הקטנה</td><td class="n">אין שינוי</td><td class="n">−15%</td><td class="n">−25%</td><td class="n">−35%</td><td class="n">ללא מחויבות</td></tr></table>
+LLI מעל 3 חודשים · SLA חודשי · ברמת קו מוצר/מוצר · Aging.</div>
+<div class="card"><h3>עלויות מלאי <span class="tag">שקף 18</span></h3>
+עלות רכישה (הנחת כמות) · עלות הזמנה (משלוח, ניהול ההזמנות) · עלות אחזקה (הון, פחת, אחסון) · עלות חוסר (דחיית/אובדן אספקות). ערך המלאי — הנמוך מבין עלות לשוק; שיטות: מחיר אחרון, ממ"ן, FIFO, הערכה מחדש. בעד/נגד מלאי (שקף 19): הנחות ומחירים, תחרות באספקה מיידית, ייצור מאוזן — מול עלות הון, אחסון, התיישנות ופחת.</div>
+<div class="card"><h3>תכנון רזה ומודלי הטיווח <span class="tag">שקפים 21–41</span></h3>
+<b>עקרונות:</b> Pull · Value Proposition · ביטול בזבוז · זמישות · שיתוף מידע · דיוק · שיפור מתמיד · Partnering · הון אנושי. "קווי הגנה" (שקף 20): תוצ"ג/COI, באפר תחזית ייצור, באפר חו"ג, קונסיגנציה אצל היצרן, VMI אצל היצרן/הספק.<br>
+<b>מודלי טיווח:</b> הצלף (מטרה ברורה ונייחת) · הפוגש (יירוט במיקום עתידי — וקטור ידוע) · הרודף (מעקב אחר וקטור לא ברור) · <b>הצלף העיוור</b> (אין מידע — מביאים את המטרה לאן שמכוונים: תחזית עבר, מודיעין, מלכודת ופיתיון, קופסת אש). תכנון ללא תחזית: נתונים, Phase In/Out, גמישות, קיצור LT, One Unit Batch, תכנון טלסקופי, פרואקטיביות.</div>
+</div>
+
+<h2 id="s3">שלמה — מיקור ורכש <small>שא-3</small></h2>
+<div class="two">
+<div class="card"><h3>תהליך הרכש — 9 שלבים <span class="tag">שקף 9</span></h3>
+דרישת רכש ← איתור מקורות ← קבלה ובחינת הצעות מחיר ← בחירת ספק ← חתימת הסכם ← בקרת הזמנה ← קבלה למלאי ← אימות חשבונית מול הזמנה ← תשלום. חמשת ה"נכון": המוצר, הספק, האיכות, הכמות, המקום.</div>
+<div class="card"><h3>אתגרי הרכש וחיסכון <span class="tag">שקפים 5–6, 11, 14</span></h3>
+שני אתגרים: <b>Cost Reduction</b> ו-<b>Material Availability</b>. השפעת הרכש על הרווחיות גדולה משל המכירות; <b>TCO</b> — העלות הכוללת. חיסכון = מחיר נוכחי (אחרון / ממ"ן) מול <b>מחיר בסיס</b> (מוצר זהה קיים, מחיר שוק, הצעה כתובה ראשונה). "קלשון החיסכון": משא ומתן (~10%) &lt; שיפור תהליכים &lt; שינוי אסטרטגיה/תפיסת הפעלה (~50%).</div>
+<div class="card"><h3>תפקידים ופרמטרי מחיר <span class="tag">שקפים 8, 10</span></h3>
+Sourcing (איתור, בחירה, חוזה) · ניהול הקשר השוטף · הסלמה · Purchasing (הזמנות) · Vendor scheduling · Expedite / De-expedite. פרמטרים: כמות/שירות, איכות, Inco Term, MPQ, Lead Time, Cancelation Window, Warranty.</div>
+<div class="card"><h3>תמחיר מול המחרה · אוקיינוס כחול <span class="tag">שקפים 12, 15–22</span></h3>
+<b>Costing</b> — סכימת כל העלויות (ישירות/עקיפות: חומרים, עבודה, תקורה) · <b>Pricing</b> — קביעת מחיר לפי ציפיות המשווק והצרכן.<br>
+<b>Blue Ocean:</b> נישה ללא מתחרים, תחרות לא רלוונטית, יצירת ביקוש חדש, בידול <i>וגם</i> עלות נמוכה (חדשנות ערך). ארבע פעולות: ביטול · צמצום · הגברה · יצירה. ארבעה עקרונות: גבולות שוק (6 נתיבים), תמונה גדולה, מעבר לביקוש הקיים, רצף אסטרטגי נכון.</div>
+</div>
+
+<h2 id="s4">שלמה — ייצור ומיקור חוץ <small>שא-4</small></h2>
+<div class="two">
+<div class="card"><h3>Make or Buy · רמות מיקור חוץ <span class="tag">שקפים 17–20</span></h3>
+<b>Buy:</b> קבועות←משתנות, רכישת ידע מהמומחים. <b>Make:</b> שליטה בהוצאות, IP, שליטה בפעילות. שיקולי Turn Key: אסטרטגיה, דוחות כספיים, יעדי השרשרת, מיקוד בליבה, Risk Sharing, TCO, קבועות←משתנות, הורדת מלאי.<br>
+רמות (פירמידה, מלמטה למעלה): All In-house → Subcontracting → Outsource → Full Turn Key → DMS (Design &amp; Mfg. Services) → JDM (Joint Development) → ODM (Origin Design). מגמות: ספקי EMS מטפסים לשירותי תכנון, וספקי ODM יורדים לשירותי ייצור. ECI–Flex: 1,000 ← 70 עובדי תפעול, 4 אתרים ← 2 שותפים.</div>
+<div class="card"><h3>שבעת הבזבוזים (Muda) <span class="tag">שקף 26</span></h3>
+1 פגמים · 2 המתנה · 3 מלאי לא נדרש · 4 תעבורה · 5 תנועות מיותרות · 6 ייצור יתר · 7 עיבוד יתר. בזבוז = מה שהלקוח לא מוכן לשלם עליו.</div>
+<div class="card"><h3>Lean · TPS · 5S · קייזן <span class="tag">שקפים 24–29</span></h3>
+Pull · Kanban (תזמון ביקוש) · JIT · Work cells · Visual Management · Kaizen · One Piece Flow · Poka Yoke (אפס פגמים). ב-TPS: Takt Time — איזון קווי ייצור · Heijunka — איזון אספקות מול הביקוש · Jidoka — אוטומציה חכמה · זיהוי תקלות, עצירת הקו ופתרון בעיות שורש. <b>5S:</b> Sort · Straighten · Shine · Standardize · Sustain. <b>אירוע קייזן:</b> Pre (בחירת תהליך, מצב קיים, גבולות, מדדים, צוות) ← אירוע (מיפוי, בזבוזים, פתרונות, החלטה, מדידה, תיעוד) ← Post (מעקב, הדרכה, אפקטיביות, אימוץ).</div>
+<div class="card"><h3>GloCal <span class="tag">שקף 22</span></h3>
+מרשת אספקה מקומית לרשת גלוקאלית — "Think Global, Act Local!": מספר אתרים, ספקים ולקוחות ברשת. Full Outsourcing: שותפות ("מטקות ולא טניס"), End-to-End ("פינה בחדר עגול"), ניהול חוסרים, תמיד מקור שני ("המראה האחורית").</div>
+</div>
+
+<h2 id="s5">שלמה — הזמנות לקוח ולוגיסטיקה <small>שא-5, שא-6</small></h2>
+<div class="two">
+<div class="card"><h3>מיקום ההזמנה בתהליך <span class="tag">שא-5 שקף 7</span></h3>
+<b>Project</b> — לפני הרכש · <b>Build to Order</b> — לפני הייצור · <b>Build to Stock</b> — ייצור לתחזית, ההזמנה אחרי הייצור.</div>
+<div class="card"><h3>מדדי ניהול הזמנות <span class="tag">שא-5 שקף 9</span></h3>
+<b>Lead Time</b> (מקבלת ההזמנה עד הפריט האחרון, מול SLA) · <b>OTD</b> (התחייבות ראשונה/SLA מול משלוח בפועל; הזמנה שלמה או שורה; Split Order; יעד כ-90%) · <b>Commitment date</b> · <b>מספר הזמנות מאחרות</b> (Counter) · <b>ימי איחור</b> (על המאחרות בלבד).<br>
+<b>קדימות:</b> SPT (הקצר קודם) · EDD (מועד יעד מוקדם קודם) · FIFO · סגירת הזמנות מלאות · לקוח רווחי/חשוב.</div>
+<div class="card"><h3>לוגיסטיקה — רמות ומתקנים <span class="tag">שא-6 שקפים 8–10</span></h3>
+<b>2PL</b> = Subcontracting · <b>3PL</b> = Outsourcing · <b>4PL</b> = Full Turn Key.<br>
+מחסן (אחסון, מלאי) ⊂ מרכז לוגיסטי (+VAS) ⊂ מרכז הפצה DC (+משלוחים ללקוחות) ⊂ מרכז הזמשה FC (+ניהול הזמנות).</div>
+<div class="card"><h3>מדדים, עלויות ולוגיסטיקה חוזרת <span class="tag">שא-6 שקפים 6, 14–16</span></h3>
+עלות לוגיסטית / מכירות או COGS · SLA · יחס אוויר:ים (עלות ~5:1) · Chargeable Weight · איחוד משלוחים · Inventory Accuracy · נצילות נפח · Transactions. עץ העלויות: שילוח (יבוא, יצוא, Drop, Courier) · מחסן (אחסון, פעילויות, VAS, הסבות, תיקונים) · הפצה. LCL / FCL. Reverse Logistics: החזרות ← Fast Exchange / תיקון ← מלאי שירות (חדש/Refurbished) ← RTV ← החזרה. <b>WMS</b> — ניהול תהליכי המחסן, מסופונים/RFID.</div>
+</div>
+
+<h2 id="s7">שלמה — אסטרטגיה וזמישות <small>שא-7</small></h2>
+<div class="two">
+<div class="card"><h3>זמישות = זמינות + זריזות + גמישות <span class="tag">שקף 15</span></h3>
+יכולת התאמה מהירה לנסיבות משתנות ולצעדי המתחרים — "הפתרון לאתגר": התאמת ההיצע לביקוש. Push (ייצור לתחזית/מלאי) ↔ Pull (הזמנת לקוח); נקודת הניתוק = קבלת הזמנת הלקוח (שקף 9). הלקוח הוא חלק מהשרשרת; חומר + מידע + כסף; שרשרת ← רשת (שקף 8).</div>
+<div class="card"><h3>התאמה אסטרטגית <span class="tag">שקפים 17–20</span></h3>
+אסטרטגיה ארגונית (איכות / זמן / גמישות / עלות) ← אסטרטגיית שרשרת: <b>יעילה</b> (עלות) ↔ <b>תגובתית</b> (אפקטיביות). ביקוש ידוע ⇔ יעילות; לא ידוע ⇔ תגובתיות. אי-ודאות גבוהה: אי-דיוק תחזית 40–100% (מול ~10%), חוסרים 10–40% (מול 1–2%), עונתיות 10–25%.</div>
+<div class="card"><h3>מי צריך Agile · המטריצה <span class="tag">שקפים 21–22</span></h3>
+20% מהמוצרים = 80% מהביקוש ← <b>Lean</b> (Make to forecast, מלאי מרכזי, יתרונות לגודל); 80% מהמוצרים = 20% מהביקוש ← <b>Agile</b> (Make to order, Quick Response, "Forecast for capacity, execute to demand").<br>
+<table><tr><th></th><th>זמן אספקה ארוך</th><th>זמן אספקה קצר</th></tr>
+<tr><td>ביקוש צפוי</td><td>Plan &amp; execute — Lean</td><td>JIT</td></tr>
+<tr><td>ביקוש לא צפוי</td><td>Hedge &amp; deploy — מלאי</td><td><b>React &amp; execute — Agile</b></td></tr></table></div>
+<div class="card"><h3>Lean מול Agile · שרשרת ביקוש זמישה <span class="tag">שקפים 24–28</span></h3>
+Lean: יעילות/עלות, מיקוד פנימה, Supply Chain, Push, ממלאי. Agile: אפקטיביות/תגובתיות, מיקוד בלקוח, Demand Chain, Pull, Batch of One. מאפייני שרשרת ביקוש זמישה: Market sensitive · Virtual · Process integration · Network based.<br>
+<table><tr><th>אסטרטגיה</th><th>עלות / יעילות</th><th>תגובתיות / אפקטיביות</th></tr>
+<tr><td>ייעוד</td><td>עלות נמוכה</td><td>תגובה מהירה</td></tr>
+<tr><td>תיכון מוצר</td><td>עלות מינימלית</td><td>מודולרי להתאמה</td></tr>
+<tr><td>המחרה</td><td>רווחיות נמוכה</td><td>רווחיות גבוהה</td></tr>
+<tr><td>ייצור</td><td>נצילות גבוהה</td><td>קיבולת גמישה</td></tr>
+<tr><td>מלאי</td><td>מינימלי</td><td>מלאי ביטחון</td></tr>
+<tr><td>זמני אספקה</td><td>צמצום בעלות מיטבית</td><td>צמצום בכל מחיר</td></tr>
+<tr><td>ספקים</td><td>עלות ואיכות נמוכה</td><td>זמישים באיכות גבוהה</td></tr>
+<tr><td>הפצה</td><td>עלות נמוכה</td><td>מהירה וזמישה</td></tr></table></div>
+</div>
+
+<h2 id="s8">שלמה — ארגז הכלים <small>שא-8</small></h2>
+<div class="two">
+<div class="card"><h3>השנה הראשונה בתפקיד <span class="tag">שקפים 7–9</span></h3>
+הלם ← שבוע (שיא קטן) ← חודש (נקודת השפל) ← 3 חודשים ← שנה — עקומת שביעות הרצון לאורך הזמן. <b>Q1</b> להקשיב, ללמוד, לא לבטל את העבר, ללמוד את הארגון וסביבת הפעולה (תוצרים: תובנות, משימות להמשך, פגישות אישיות) · <b>Q2</b> תכנון — הכנת תוכנית עבודה: ייעוד, אסטרטגיה, קודי התנהגות, מדדים · <b>Q3</b> יישום השינוי, תחילת החלפת כוח אדם, ניהול ספקים (יישום תהליכים, ארגון מבנה השרשרת, מדידת ביצועים כנקודת ייחוס) · <b>Q4</b> בקרה ולמידה — שיפור ביצועים (עדכון ייעוד, מדדים ואסטרטגיה, לקחים משנה ראשונה, תוכנית לשנה הבאה).</div>
+<div class="card"><h3>מערכת ניהול, מדידה ובקרה <span class="tag">שקף 17</span></h3>
+עץ מדדים · BSC ו-SMART · Dash Board · דו"ח שבועי (תכנון מול ביצוע) · דו"ח חודשי (מדדים עיקריים) · QBR רבעוני (KPI ומעקב משימות) · תוכנית שנתית (תיקוף ייעוד, אסטרטגיה, תקציב) · SAD.</div>
+<div class="card"><h3>התפתחות השרשרת · תפיסת הפעלה <span class="tag">שקפים 12, 15</span></h3>
+פנים-ארגונית ← חוץ-ארגונית ← רשת אספקה ← GloCal → Lean → Agile ("מיעילה לאפקטיבית, מאספקה לביקוש"). השרשרת <b>אינה</b> הליבה: מרכיב הוצאה משמעותי, בחינת מיקור חוץ. השרשרת <b>היא</b> הליבה: חלק מהצעת הערך, המרכיב העיקרי בהוצאות, פוטנציאל למרכז רווח, הרחבת שירותים.</div>
+<div class="card"><h3>מודלים מתקדמים · ספקים <span class="tag">שקפים 18, 23–35</span></h3>
+<b>שיתופית (Shared):</b> עודף משאבים בטלים מול חוסרים ← פלטפורמה, קבועות←משתנות, נצילות, שיטוח. <b>שטוחה (Flat):</b> מניהול שרשרת אספקה לניהול שרשרת הביקוש; eSupplyChain, B2B→B2C; טכנולוגיה (מהירות תקשורת, זמינות מידע) ⇐ פישוט תהליכים והקטנת מלאים. רכיבים: שיפור אמינות התחזית, הבטחת זמינות המלאי, קיצור זמני אספקה מספקים, צמצום מגוון המוצרים, דחיינות, איחוד מרכזי הפצה, משלוחים קטנים ותכופים, קיצור תהליכים לוגיסטיים, מערכת מידע לשליטה ובקרה. <b>התנהגותית:</b> הטיות — הבטחת אספקות או מלאי, מבצעי 1+1, שנאת הפסד, מוצר השוואתי, החלטות הרוב, צדק חברתי. מחזור חיי ספקים: בחירה (הרכש) ← ניהול שוטף (שרשרת האספקה) ← הערכה תקופתית (ניהול איכות) ← אירועים חריגים (ניהול איכות).</div>
+</div>
+
+<div class="sub" style="margin-top:26px">לתרגול לימודי בלבד · נבנה ממצגות הקורס ומהקלטות ההרצאות · <a href="index.html">לבוחן התרגול</a></div>
+</div>
+</body>
+</html>
