@@ -11,7 +11,7 @@
   --okBg:#e6f4ea; --okBd:#9bd3ad; --okTx:#1a6b1a;
   --errBg:#fceaea; --errBd:#e6a3a3; --errTx:#b23030;
   --warnTx:#854f0b; --warnBg:#faeeda;
-  --clsTx:#0f6e56; --clsBg:#e1f5ee;
+  --clsTx:#0f6e56; --clsBg:#e1f5ee; --lecTx:#6a3fa0; --lecBg:#f1e8fb;
   --chipBg:#eaefee;
 }
 @media (prefers-color-scheme:dark){
@@ -21,7 +21,7 @@
     --okBg:#16331f; --okBd:#2f6b3f; --okTx:#7fd49a;
     --errBg:#3a1d1d; --errBd:#7a3535; --errTx:#e89393;
     --warnTx:#fac775; --warnBg:#4a2b06;
-    --clsTx:#9fe1cb; --clsBg:#0d4438;
+    --clsTx:#9fe1cb; --clsBg:#0d4438; --lecTx:#d6bff7; --lecBg:#3a2a55;
     --chipBg:#2b3130;
   }
 }
@@ -31,7 +31,7 @@ html.dark{
   --okBg:#16331f; --okBd:#2f6b3f; --okTx:#7fd49a;
   --errBg:#3a1d1d; --errBd:#7a3535; --errTx:#e89393;
   --warnTx:#fac775; --warnBg:#4a2b06;
-  --clsTx:#9fe1cb; --clsBg:#0d4438;
+  --clsTx:#9fe1cb; --clsBg:#0d4438; --lecTx:#d6bff7; --lecBg:#3a2a55;
   --chipBg:#2b3130;
 }
 html.light{
@@ -40,7 +40,7 @@ html.light{
   --okBg:#e6f4ea; --okBd:#9bd3ad; --okTx:#1a6b1a;
   --errBg:#fceaea; --errBd:#e6a3a3; --errTx:#b23030;
   --warnTx:#854f0b; --warnBg:#faeeda;
-  --clsTx:#0f6e56; --clsBg:#e1f5ee;
+  --clsTx:#0f6e56; --clsBg:#e1f5ee; --lecTx:#6a3fa0; --lecBg:#f1e8fb;
   --chipBg:#eaefee;
 }
 *{box-sizing:border-box}
@@ -207,12 +207,17 @@ var SRC_META={
   "ניצן":{bg:"var(--accentSoft)",fg:"var(--accent)",full:"ד\"ר ניצן סוויד — מצגות"},
   "הקלטות":{bg:"var(--warnBg)",fg:"var(--warnTx)",full:"מההקלטות — דגשי המרצה"}
 };
+/* שאלות לדוגמה של המרצה עצמו (שלמה), מסומנות בשדה m:
+   1 — הועתקו כלשונן מדף השאלות המודפס שהציג בשיעור;
+   2 — שוחזרו מהקלטת השיעור שבו הקריא שאלות והכיתה ענתה (הניסוח קרוב, לא מילה במילה). */
+var LECT_META={1:"⭐ שאלת המרצה — מדף השאלות לדוגמה",2:"⭐ שאלת המרצה — שוחזרה מהקלטת השיעור",3:"⭐ שאלת המרצה — שוחזרה מתמלול שיעור הסיכום"};
+function isLect(q){return !!q.m;}
 var app=document.getElementById("app");
 var TOPICS=[]; (function(){var s={};BANK.forEach(function(b){if(!s[b.t]){s[b.t]=1;TOPICS.push(b.t);}}); })();
 
 /* נושא שהמרצה אמר שלא יהיה במבחן (למשל דה-קומפוזיציה) — לא מסומן כברירת מחדל */
 var sel={topics:TOPICS.filter(function(t){return t.indexOf("לא במבחן")<0;}),src:"all",mode:"practice",shuffle:true,minutes:0,count:25,pcount:20,balanced:true};
-var quiz=[],idx=0,score=0,answered=false,wrong=[],ansMap=[],timer=null,timeLeft=0;
+var quiz=[],idx=0,ansMap=[],timer=null,timeLeft=0;
 
 function E(tag,attr,html){var e=document.createElement(tag);if(attr)for(var k in attr)e.setAttribute(k,attr[k]);if(html!=null)e.innerHTML=html;return e;}
 function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
@@ -223,6 +228,8 @@ function isCalc(q){return q.k==="calc";}
 var SCOPE={
   all:   {name:"הכל",                hint:"כל המאגר — שני המרצים, כולל שאלות החישוב. כך נראה המבחן: כמותי ואיכותי יחד",
           f:function(q){return true;}},
+  lect:  {name:"⭐ שאלות המרצה",       hint:"שאלות של שלמה ארליך עצמו, עם התשובות שאישר: מהדף המודפס שהציג בשיעור, מהקלטת השיעור שבו הקריא שאלות והכיתה ענתה, ומתמלול שיעור הסיכום. לדבריו שאלות המבחן נלקחות ממאגר של 76 שאלות כאלה — כדאי לעבור על כולן, ולשים לב למילים ״אינו״ ו״הינו״",
+          f:function(q){return isLect(q);}},
   shlomo:{name:"שלמה — תהליכים ומודלים", hint:"רק המצגות של שלמה ארליך (שא 1–8): מבנה השרשרת, ניהול חומר, רכש, ייצור, הזמנות, לוגיסטיקה, אסטרטגיה וארגז הכלים",
           f:function(q){return q.s==="שלמה";}},
   nitsan:{name:"ניצן — מודלים כמותיים", hint:"רק החומר של ד\"ר ניצן סוויד: אינטגרציה, חיזוי, מלאי, פארטו, אחזקה, אמינות וחלופות רכש — כולל דגשים מההקלטות",
@@ -235,13 +242,15 @@ function filterBank(){return BANK.filter(function(x){return sel.topics.indexOf(x
 function countScope(k){return BANK.filter(function(x){return SCOPE[k].f(x);}).length;}
 
 document.getElementById("sub").textContent =
-  BANK.length+" שאלות בפורמט המבחן — "+countScope("calc")+" מהן שאלות חישוב. "+
+  BANK.length+" שאלות בפורמט המבחן — "+countScope("calc")+" מהן שאלות חישוב"+
+  (countScope("lect")?" ו-"+countScope("lect")+" שאלות לדוגמה של המרצה עצמו":"")+". "+
   "לפי הסילבוס: 25 שאלות רב-ברירה, כמותיות ואיכותיות, על כל החומר של שני המרצים (60% מהציון).";
 /* מערבב את סדר התשובות בכל שאלה, כדי שהתשובה הנכונה לא תהיה תמיד באותו מקום */
 function prepQ(q){
-  var order=shuffle([0,1,2,3]);
+  /* fx — שאלת מרצה שבה תשובה מפנה לתשובות אחרות (״א׳ ו-ב׳ נכונות״): הסדר המקורי נשמר */
+  var order=q.fx?[0,1,2,3]:shuffle([0,1,2,3]);
   var opts=order.map(function(i){return q.o[i];});
-  return {t:q.t,s:q.s,q:q.q,o:opts,c:order.indexOf(q.c),e:q.e,k:q.k};
+  return {t:q.t,s:q.s,q:q.q,o:opts,c:order.indexOf(q.c),e:q.e,k:q.k,m:q.m};
 }
 function buildQuiz(){
   var arr=filterBank().map(prepQ);
@@ -276,9 +285,9 @@ function setup(){
   c.appendChild(E("div",{"class":"note"},
     "<b>המבחן (לפי הסילבוס):</b> 25 שאלות רב-ברירה, כמותיות ואיכותיות, על כל החומר — התיאורטי של שלמה והמודלים של ניצן. "+
     "ניצן בהרצאה: «במבחן יהיו חישובים, לא מסובכים» — <b>להביא מחשבון</b>.<br>"+
-    "<b>איך לתרגל:</b> ב<b>מצב תרגול</b> מקבלים משוב והסבר אחרי כל שאלה, ובסוף הסבב אפשר לתרגל רק את השגויות. "+
+    "<b>איך לתרגל:</b> ב<b>מצב תרגול</b> מקבלים משוב והסבר אחרי כל שאלה, אפשר לעבור בחופשיות בין השאלות (הקודמת, הבאה ומפת השאלות), ובסוף הסבב לתרגל רק את השגויות. "+
     "ב<b>סימולציית מבחן</b> עונים על 25 שאלות (כמו במבחן) ורק בסוף מקבלים ציון וסקירה של כל שגיאה.<br>"+
-    "<b>מאיפה להתחיל:</b> בהיקף <b>חישובים בלבד</b> — לוודא שכל נוסחה יושבת ביד; אחר כך <b>הכל</b> עם פריסה מאוזנת בין הנושאים."));
+    "<b>מאיפה להתחיל:</b> בהיקף <b>⭐ שאלות המרצה</b> — השאלות לדוגמה של שלמה עצמו, עם התשובות שסימן; בהיקף <b>חישובים בלבד</b> — לוודא שכל נוסחה יושבת ביד; אחר כך <b>הכל</b> עם פריסה מאוזנת בין הנושאים."));
 
   /* mode */
   var row1=E("div",{"class":"toolbar"});
@@ -296,7 +305,8 @@ function setup(){
   /* היקף לימוד */
   var row0=E("div",{"class":"toolbar"});
   row0.appendChild(E("span",{"class":"lbl"},"היקף:"));
-  ["all","shlomo","nitsan","calc"].forEach(function(k){
+  ["all","lect","shlomo","nitsan","calc"].forEach(function(k){
+    if(!countScope(k))return;
     var b=E("button",{"class":"chip"+(sel.src===k?" active":"")},
       SCOPE[k].name+" <small>"+countScope(k)+"</small>");
     b.onclick=function(){sel.src=k;setup();};
@@ -418,7 +428,7 @@ function printSheet(withAnswers){
         arr.length+" שאלות · "+(SCOPE[sel.src]?SCOPE[sel.src].name:sel.src)+
         " · "+(withAnswers?"עם תשובות והסברים":"ללא תשובות")+"</div></div>";
   arr.forEach(function(q,i){
-    h+='<div class="pq"><div class="pt"><span class="iso">'+q.t+'</span>'+(isCalc(q)?' · 🧮 חישוב':'')+'</div>'+
+    h+='<div class="pq"><div class="pt"><span class="iso">'+q.t+'</span>'+(isCalc(q)?' · 🧮 חישוב':'')+(isLect(q)?' · ⭐ שאלת המרצה':'')+'</div>'+
        '<div><span class="pn">'+(i+1)+'.</span> '+q.q+'</div>';
     q.o.forEach(function(o,k){ h+='<div class="po">'+LET[k]+". "+o+"</div>"; });
     if(withAnswers)
@@ -439,7 +449,9 @@ function bar(frac){
 function metaRow(q){
   var r=E("div",{"class":"qmeta"});
   r.innerHTML='<span class="pill"><span class="iso">'+q.t+'</span></span>'+
-    '<span class="pill" style="background:'+srcBg(q.s)+';color:'+srcFg(q.s)+'">'+((SRC_META[q.s]||{}).full||q.s)+'</span>'+
+    (isLect(q)
+      ? '<span class="pill" style="background:var(--lecBg);color:var(--lecTx);font-weight:650">'+(LECT_META[q.m]||LECT_META[1])+'</span>'
+      : '<span class="pill" style="background:'+srcBg(q.s)+';color:'+srcFg(q.s)+'">'+((SRC_META[q.s]||{}).full||q.s)+'</span>')+
     (isCalc(q)?'<span class="pill" style="background:var(--warnBg);color:var(--warnTx)">🧮 חישוב — מחשבון</span>':'');
   return r;
 }
@@ -456,73 +468,91 @@ function topBar(extraHtml){
 }
 
 /* ---------- practice mode ---------- */
+/* אפשר לשוטט בין השאלות: הקודמת, הבאה ומפת שאלות. תשובה שנבחרה נשמרת, וכשחוזרים לשאלה
+   רואים שוב את הסימון ואת ההסבר. */
 function practiceStart(){
   quiz=buildQuiz();
   /* אותה דגימה מאוזנת של המבחן — סבב קצר שמרוכז בשניים-שלושה נושאים
      אינו מייצג, והמאגר אינו מאוזן בין הנושאים. */
-  if(sel.pcount&&quiz.length>sel.pcount)
+  /* שאלות המרצה הן קבוצה קטנה שרוצים לעבור על כולה — בלי דגימה לסבב */
+  if(sel.pcount&&quiz.length>sel.pcount&&sel.src!=="lect")
     quiz=shuffle(balancedPick(quiz,sel.pcount));
-  idx=0;score=0;wrong=[];ansMap=[];
-  pRender();
+  pBegin();
 }
-function pRender(){
-  if(idx>=quiz.length)return pResults();
-  var q=quiz[idx];
+function pBegin(){idx=0;ansMap=new Array(quiz.length);pRender();}
+function pTally(){
+  var ok=0,bad=[],n=0;
+  quiz.forEach(function(q,i){ if(ansMap[i]==null)return; n++; if(ansMap[i]===q.c)ok++; else bad.push(q); });
+  return {ok:ok,bad:bad,n:n};
+}
+function pRender(keepScroll){
+  var q=quiz[idx],a=ansMap[idx],done=a!=null,T=pTally(),last=idx===quiz.length-1;
   app.innerHTML="";
   var c=E("div",{"class":"card"});
   c.appendChild(topBar());
   var st=E("div",{"class":"stats"});
-  function statsHtml(done){
-    var seen=idx+(done?1:0);
-    return "<span>שאלה <b>"+(idx+1)+"</b> / <b>"+quiz.length+"</b></span>"+
-      "<span>נכונות: <b>"+score+"</b></span>"+
-      "<span>שגויות: <b>"+wrong.length+"</b></span>"+
-      "<span class='spacer'></span><span>הצלחה: <b>"+(seen?Math.round(score/seen*100)+"%":"—")+"</b></span>";
-  }
-  st.innerHTML=statsHtml(false);
+  st.innerHTML="<span>שאלה <b>"+(idx+1)+"</b> / <b>"+quiz.length+"</b></span>"+
+    "<span>נכונות: <b>"+T.ok+"</b></span>"+
+    "<span>שגויות: <b>"+T.bad.length+"</b></span>"+
+    "<span class='spacer'></span><span>הצלחה: <b>"+(T.n?Math.round(T.ok/T.n*100)+"%":"—")+"</b></span>";
   c.appendChild(st);
-  c.appendChild(bar(idx/quiz.length));
+  c.appendChild(bar(T.n/quiz.length));
   c.appendChild(metaRow(q));
   c.appendChild(E("div",{"class":"qtext"},q.q));
 
   var box=E("div");
-  answered=false;
   q.o.forEach(function(txt,i){
-    var b=E("button",{"class":"opt"});
+    var cls="opt";
+    if(done)cls+=" locked"+(i===q.c?" correct":i===a?" wrong":"");
+    var b=E("button",{"class":cls});
     b.innerHTML='<span class="ltr">'+LET[i]+'</span><span>'+txt+'</span>';
-    b.onclick=function(){
-      if(answered)return;
-      answered=true;
-      var all=box.querySelectorAll(".opt");
-      for(var k=0;k<all.length;k++)all[k].className="opt locked";
-      all[q.c].className="opt correct locked";
-      if(i===q.c){score++;}
-      else{all[i].className="opt wrong locked";wrong.push(q);}
-      st.innerHTML=statsHtml(true);
-      var ex=E("div",{"class":"expl"});
-      ex.innerHTML='<span class="tag">'+(i===q.c?"נכון · ":"התשובה הנכונה: "+LET[q.c]+" · ")+'</span>'+q.e;
-      c.insertBefore(ex,navRow);
-      nextBtn.disabled=false;nextBtn.className="btn btn-pri";
-    };
+    b.onclick=function(){ if(ansMap[idx]!=null)return; ansMap[idx]=i; pRender(true); };
     box.appendChild(b);
   });
   c.appendChild(box);
+  if(done){
+    var ex=E("div",{"class":"expl"});
+    ex.innerHTML='<span class="tag">'+(a===q.c?"נכון · ":"התשובה הנכונה: "+LET[q.c]+" · ")+'</span>'+q.e;
+    c.appendChild(ex);
+  }
 
-  var navRow=E("div",{"class":"nav"});
-  var nextBtn=E("button",{"class":"btn"},idx===quiz.length-1?"סיום וצפייה בציון":"השאלה הבאה ←");
-  nextBtn.disabled=true;
-  nextBtn.onclick=function(){idx++;pRender();};
-  var skip=E("button",{"class":"btn"},"דילוג");
-  skip.onclick=function(){idx++;pRender();};
-  navRow.appendChild(nextBtn);navRow.appendChild(skip);
-  c.appendChild(navRow);
+  var nav=E("div",{"class":"nav"});
+  var prev=E("button",{"class":"btn"},"→ הקודמת");
+  prev.disabled=idx===0;
+  prev.onclick=function(){idx--;pRender();};
+  var next=E("button",{"class":"btn"+(done?" btn-pri":"")},last?"סיום וצפייה בציון":done?"השאלה הבאה ←":"דילוג ←");
+  next.onclick=function(){ if(last)pResults(); else{idx++;pRender();} };
+  nav.appendChild(prev);nav.appendChild(next);
+  c.appendChild(nav);
+
+  c.appendChild(E("div",{"class":"ptitle",style:"margin-top:16px"},
+    "מפת שאלות — לחצו כדי לעבור לשאלה · ירוק: נכונה · אדום: שגויה"));
+  var pal=E("div",{"class":"palette"});
+  quiz.forEach(function(qq,i){
+    var m=ansMap[i]==null?"":ansMap[i]===qq.c?" ok":" bad";
+    var b=E("button",{"class":"pbtn"+m+(i===idx?" cur":"")},String(i+1));
+    b.onclick=function(){idx=i;pRender();};
+    pal.appendChild(b);
+  });
+  c.appendChild(pal);
+  if(!last){
+    var fin=E("button",{"class":"btn"},"סיום הסבב וצפייה בציון");
+    fin.style.width="100%";fin.style.marginTop="14px";
+    fin.onclick=function(){
+      var un=quiz.length-T.n;
+      if(un>0&&!confirm("נותרו "+un+" שאלות שלא נענו. לסיים את הסבב?"))return;
+      pResults();
+    };
+    c.appendChild(fin);
+  }
   app.appendChild(c);
-  window.scrollTo(0,0);
+  if(!keepScroll)window.scrollTo(0,0);
 }
 function pResults(){
-  results(score,quiz.length,wrong,practiceStart,function(){
-    quiz=wrong.slice();if(sel.shuffle)shuffle(quiz);
-    idx=0;score=0;wrong=[];pRender();
+  var T=pTally();
+  results(T.ok,quiz.length,T.bad,practiceStart,function(){
+    quiz=T.bad.slice();if(sel.shuffle)shuffle(quiz);
+    pBegin();
   },null);
 }
 

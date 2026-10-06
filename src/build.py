@@ -70,6 +70,9 @@ dist = {}
 for c in cs:
     dist[c] = dist.get(c, 0) + 1
 print("\nפיזור אינדקס התשובה הנכונה במקור:", dict(sorted(dist.items())))
+lect = {k: len(re.findall(r',m:%d[,}]' % k, bank)) for k in (1, 2, 3)}
+if sum(lect.values()):
+    print("שאלות המרצה (m): %d מהדף המודפס, %d משוחזרות מהקלטה, %d משוחזרות מתמלול שיעור הסיכום" % (lect[1], lect[2], lect[3]))
 if len(cs) != len(objs):
     print("!! אזהרה: לא כל השאלות נותחו (%d מתוך %d)" % (len(cs), len(objs)))
 
@@ -101,6 +104,10 @@ def update_readme():
         "**לפי מקור:** %s\n"
         % (len(objs), "\n".join(lines), src_line)
     )
+    if sum(lect.values()):
+        block += ("\n**⭐ שאלות המרצה:** %d — %d כלשונן מהדף המודפס שהציג בשיעור, "
+                  "%d משוחזרות מהקלטת השיעור שבו הקריא שאלות, %d משוחזרות מתמלול שיעור הסיכום (נספרות בתוך ״שלמה״).\n"
+                  % (sum(lect.values()), lect[1], lect[2], lect[3]))
     open(path, "w", encoding="utf-8").write(txt[:i] + block + txt[j:])
     print("עודכן:", path)
 
@@ -122,7 +129,7 @@ BANK.forEach((q,i)=>{
   if(!Array.isArray(q.o)||q.o.length!==4) err.push(at+' — אין בדיוק 4 אפשרויות');
   else if(new Set(q.o).size!==4)          err.push(at+' — אפשרות כפולה');
   if(typeof q.c!=='number'||q.c<0||q.c>3) err.push(at+' — c מחוץ לתחום');
-  if((q.o||[]).some(o=>POS.test(o)))      err.push(at+' — מסיח תלוי-מיקום');
+  if(!q.fx&&(q.o||[]).some(o=>POS.test(o))) err.push(at+' — מסיח תלוי-מיקום');
   /* כפילות ניסוח: נוצרת כשמאריכים מסיח בטקסט שכבר מופיע בסופו. */
   (q.o||[]).forEach((o)=>{
     const w=String(o).replace(/<[^>]+>/g,'').split(/\s+/);   /* בלי תגיות bdi */

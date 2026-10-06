@@ -8,7 +8,11 @@
   S     — מקור ברירת מחדל (שדה s)
   KEEP  — (אופציונלי) נתיב לקובץ שורות JS קיימות שנשמרות בראש הבנק
   Q     — רשימת מילונים: q (שאלה), a (התשובה הנכונה), d (שלושה מסיחים),
-          e (הסבר), ואופציונלי s (מקור) ו-k ("calc")
+          e (הסבר), ואופציונלי s (מקור), t (נושא), k ("calc") ו-m (שאלת מרצה:
+          1 = כלשונה מהדף, 2 = שוחזרה מהקלטה, 3 = שוחזרה מתמלול שיעור הסיכום).
+          שאלת מרצה שבה תשובה מפנה לתשובות אחרות (״א׳ ו-ב׳ נכונות״) נכתבת
+          עם o (ארבע האפשרויות בסדר המקורי) ו-c (אינדקס הנכונה) במקום a/d,
+          ומקבלת fx:1 — האפליקציה לא מערבבת אותה.
 
 הכלי מציב את התשובה הנכונה במיקום מאוזן (0–3) ומדפיס בדיקת אורך:
 L = הנכונה ארוכה מכל המסיחים ביותר מ-2 תווים, S = קצרה מכולם ביותר מ-2.
@@ -31,6 +35,12 @@ def js(x):
 # ---- בדיקות קלט ----
 errs = []
 for i, it in enumerate(Q):
+    if "o" in it:                               # סדר מקורי קבוע: o + c במקום a + d
+        if len(it["o"]) != 4 or it.get("c") not in (0, 1, 2, 3):
+            errs.append("#%d — סדר קבוע: צריך 4 אפשרויות ב-o ו-c בין 0 ל-3" % i)
+            continue
+        it["a"] = it["o"][it["c"]]
+        it["d"] = [x for k, x in enumerate(it["o"]) if k != it["c"]]
     for f in ("q", "a", "d", "e"):
         if f not in it: errs.append("#%d חסר שדה %s" % (i, f))
     if len(it.get("d", [])) != 3: errs.append("#%d — צריך בדיוק 3 מסיחים" % i)
@@ -49,7 +59,7 @@ for l in keep:
     if m: kept_c.append(int(m.group(1)))
 rng = random.Random(T)
 need = len(Q)
-counts = [kept_c.count(k) for k in range(4)]
+counts = [kept_c.count(k) + sum(1 for it in Q if "o" in it and it["c"] == k) for k in range(4)]
 pos = []
 for _ in range(need):
     lo = min(counts)
@@ -66,12 +76,14 @@ import re
 _SEG = re.compile(r"(<bdi[^>]*>.*?</bdi>|<[^>]+>)", re.S)
 _LET = "A-Za-zͰ-ϿЀ-ӿ"
 _RUN = re.compile(r"(?:\d+(?:[.,]\d+)?(?:\s*[/·*]\s*)?)?[" + _LET + "√Σ∑Π]"   # כולל ״2.6M״ ו״1/Ф״
-                  r"[" + _LET + r"0-9 =+−\-·/*^()\[\].,%²³⁴⁰¹⌈⌉⌊⌋√≈<>≤≥_∑Σ]*")
+                  r"[" + _LET + r"0-9 =+−\-·/*^()\[\].,%²³⁴⁰¹⌈⌉⌊⌋√≈<>≤≥_∑Σ→➔]*")
+# החץ → בתוך הרצף: ״LCL → FCL״ הוא רצף אחד משמאל לימין. כששני הצדדים בודדו בנפרד,
+# הסדר החזותי בשורה עברית התהפך (FCL → LCL על המסך) — בדיוק ההפך מהכתוב.
 
 def _trim(r):
     while True:
         r0 = r
-        r = r.rstrip(" .,;:−-([=+·/^<>≈≤≥")       # לא לסיים ברצף באופרטור (אבל * של Q* נשאר)
+        r = r.rstrip(" .,;:−-([=+·/^<>≈≤≥→➔")     # לא לסיים ברצף באופרטור או בחץ (אבל * של Q* נשאר)
         if r.endswith(")") and r.count(")") > r.count("("):
             r = r[:-1]
         if r.endswith("]") and r.count("]") > r.count("["):
@@ -107,10 +119,14 @@ for i, it in enumerate(Q):
     ds = list(it["d"]); rng.shuffle(ds)
     c = pos[i]
     opts = ds[:c] + [it["a"]] + ds[c:]
+    if "o" in it:                               # סדר מקורי קבוע
+        opts, c = list(it["o"]), it["c"]
     s = it.get("s", S)
-    line = "{t:%s,s:%s,q:%s,o:[%s],c:%d,e:%s%s}" % (
+    line = "{t:%s,s:%s,q:%s,o:[%s],c:%d,e:%s%s%s%s}" % (
         js(it.get("t", T)), js(s), js(iso(it["q"])), ",".join(js(iso(o)) for o in opts), c, js(iso(it["e"])),
-        (",k:" + js(it["k"])) if it.get("k") else "")
+        (",k:" + js(it["k"])) if it.get("k") else "",
+        (",m:%d" % it["m"]) if it.get("m") else "",
+        ",fx:1" if "o" in it else "")
     lines.append(line)
     la, ld = vlen(it["a"]), [vlen(x) for x in it["d"]]
     tag = "L" if la > max(ld) + 2 else ("S" if la < min(ld) - 2 else "")
