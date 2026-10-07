@@ -182,10 +182,10 @@ header .sub{color:var(--muted);font-size:13.5px;margin-bottom:16px;}
   <div class="sub" id="sub"></div>
   <div class="aids">
     <a class="aid" href="נוסחאות.html" target="_blank" rel="noopener">
-      <i>📐</i><span><b>דף נוסחאות ומושגים</b> · הנוסחאות של ניצן עם דוגמה פתורה לכל אחת, והמודלים של שלמה בעמוד</span>
+      <i>📐</i><span><b>דף נוסחאות ומושגים</b> · בראשו: מה נאמר על המבחן והפתרונות של הבחינה לדוגמה. אחריו הנוסחאות של ניצן עם דוגמה פתורה לכל אחת, והמודלים של שלמה בעמוד</span>
     </a>
     <a class="aid" href="podcast/index.html" target="_blank" rel="noopener">
-      <i>🎧</i><span><b>פודקאסט להאזנה</b> · 11 פרקים, כשעתיים: המודלים של ניצן, המצגות של שלמה וחזרה למבחן</span>
+      <i>🎧</i><span><b>פודקאסט להאזנה</b> · 12 פרקים, כשעתיים ו-20 דקות: המודלים של ניצן, המצגות של שלמה, חזרה למבחן — ופרק 12 החדש על מבנה המבחן והבחינה לדוגמה</span>
     </a>
   </div>
 </header>
@@ -199,7 +199,7 @@ header .sub{color:var(--muted);font-size:13.5px;margin-bottom:16px;}
 /*__BANK__*/
 (function(){
 "use strict";
-var LET=["א","ב","ג","ד"];
+var LET=["א","ב","ג","ד","ה"];   /* ה׳ — בשאלות בפורמט הבחינה של ניצן, חמש תשובות */
 /* מקור השאלה: איזה מרצה ואיזה חומר. שלמה — המצגות "שא"; ניצן — המצגות
    הממוספרות; הקלטות — דגשים שנאמרו בשיעור ולא כתובים בשקפים. */
 var SRC_META={
@@ -207,16 +207,22 @@ var SRC_META={
   "ניצן":{bg:"var(--accentSoft)",fg:"var(--accent)",full:"ד\"ר ניצן סוויד — מצגות"},
   "הקלטות":{bg:"var(--warnBg)",fg:"var(--warnTx)",full:"מההקלטות — דגשי המרצה"}
 };
-/* שאלות לדוגמה של המרצה עצמו (שלמה), מסומנות בשדה m:
-   1 — הועתקו כלשונן מדף השאלות המודפס שהציג בשיעור;
-   2 — שוחזרו מהקלטת השיעור שבו הקריא שאלות והכיתה ענתה (הניסוח קרוב, לא מילה במילה). */
-var LECT_META={1:"⭐ שאלת המרצה — מדף השאלות לדוגמה",2:"⭐ שאלת המרצה — שוחזרה מהקלטת השיעור",3:"⭐ שאלת המרצה — שוחזרה מתמלול שיעור הסיכום"};
+/* שאלות לדוגמה של המרצים עצמם, מסומנות בשדה m.
+   שלמה: 1 — הועתקו כלשונן מדף השאלות המודפס שהציג בשיעור;
+         2 — שוחזרו מהקלטת השיעור שבו הקריא שאלות והכיתה ענתה (הניסוח קרוב, לא מילה במילה);
+         3 — שוחזרו מתמלול שיעור הסיכום.
+   ניצן: 4 — מהבחינה לדוגמה שפתר בשיעור הסיכום (6.10), חמש תשובות לשאלה;
+         5 — משאלות התרגול שצירף לאותו מסמך. */
+var LECT_META={1:"⭐ שאלת המרצה — מדף השאלות לדוגמה",2:"⭐ שאלת המרצה — שוחזרה מהקלטת השיעור",3:"⭐ שאלת המרצה — שוחזרה מתמלול שיעור הסיכום",
+               4:"⭐ ניצן — מהבחינה לדוגמה (שיעור 6.10)",5:"⭐ ניצן — משאלות התרגול שצירף לבחינה לדוגמה"};
 function isLect(q){return !!q.m;}
+function isShlomo(q){return q.s==="שלמה";}
 var app=document.getElementById("app");
 var TOPICS=[]; (function(){var s={};BANK.forEach(function(b){if(!s[b.t]){s[b.t]=1;TOPICS.push(b.t);}}); })();
 
 /* נושא שהמרצה אמר שלא יהיה במבחן (למשל דה-קומפוזיציה) — לא מסומן כברירת מחדל */
-var sel={topics:TOPICS.filter(function(t){return t.indexOf("לא במבחן")<0;}),src:"all",mode:"practice",shuffle:true,minutes:0,count:25,pcount:20,balanced:true};
+function inExam(t){return t.indexOf("לא במבחן")<0;}
+var sel={topics:TOPICS.filter(inExam),src:"all",mode:"practice",shuffle:true,minutes:0,count:25,pcount:20,balanced:true,real:true};
 var quiz=[],idx=0,ansMap=[],timer=null,timeLeft=0;
 
 function E(tag,attr,html){var e=document.createElement(tag);if(attr)for(var k in attr)e.setAttribute(k,attr[k]);if(html!=null)e.innerHTML=html;return e;}
@@ -228,29 +234,36 @@ function isCalc(q){return q.k==="calc";}
 var SCOPE={
   all:   {name:"הכל",                hint:"כל המאגר — שני המרצים, כולל שאלות החישוב. כך נראה המבחן: כמותי ואיכותי יחד",
           f:function(q){return true;}},
-  lect:  {name:"⭐ שאלות המרצה",       hint:"שאלות של שלמה ארליך עצמו, עם התשובות שאישר: מהדף המודפס שהציג בשיעור, מהקלטת השיעור שבו הקריא שאלות והכיתה ענתה, ומתמלול שיעור הסיכום. לדבריו שאלות המבחן נלקחות ממאגר של 76 שאלות כאלה — כדאי לעבור על כולן, ולשים לב למילים ״אינו״ ו״הינו״",
+  lect:  {name:"⭐ שאלות המרצים",      hint:"שאלות של שני המרצים עצמם, עם התשובות שאישרו. <b>שלמה</b>: מהדף המודפס שהציג בשיעור, מהקלטת השיעור שבו הקריא שאלות ומתמלול שיעור הסיכום — לדבריו שאלות המבחן נלקחות ממאגר של 76 שאלות כאלה, ולכן כדאי לעבור על כולן ולשים לב למילים ״אינו״ ו״הינו״. <b>ניצן</b>: הבחינה לדוגמה שפתר בשיעור הסיכום (6.10) ושאלות התרגול שצירף אליה — אצלו חמש תשובות לשאלה. לבחירת מרצה אחד: הכפתורים ״כל שלמה״ / ״כל ניצן״ בשורת הנושאים",
           f:function(q){return isLect(q);}},
+  nexam: {name:"⭐ הבחינה לדוגמה של ניצן", hint:"עשר שאלות הבחינה לדוגמה כפי שניצן הציג ופתר בשיעור הסיכום (6.10), עם הפתרון המלא ועם מה שאמר על כל שאלה — ואחריהן שבע שאלות התרגול העיוניות שצורפו בסוף אותו מסמך (לא נפתרו בשיעור). בבחינה לדוגמה התשובה הנכונה היא תמיד א׳ — כאן הסדר מעורבב. לדבריו שאלות המבחן עצמו יהיו קצרות ופשוטות יותר. שאלות 5 ו-10, שעליהן אמר שאינן בחומר («אני אוריד שתי שאלות שלא רלוונטיות»), נמצאות בשורת «לא במבחן» ואינן נבחרות כברירת מחדל; בשאלה 8 הנספח לא הוצג בשיעור, והנתונים שבה הושלמו",
+          f:function(q){return q.m===4||q.m===5;}},
   shlomo:{name:"שלמה — תהליכים ומודלים", hint:"רק המצגות של שלמה ארליך (שא 1–8): מבנה השרשרת, ניהול חומר, רכש, ייצור, הזמנות, לוגיסטיקה, אסטרטגיה וארגז הכלים",
           f:function(q){return q.s==="שלמה";}},
-  nitsan:{name:"ניצן — מודלים כמותיים", hint:"רק החומר של ד\"ר ניצן סוויד: אינטגרציה, חיזוי, מלאי, פארטו, אחזקה, אמינות וחלופות רכש — כולל דגשים מההקלטות",
+  nitsan:{name:"ניצן — מודלים כמותיים", hint:"רק החומר של ד\"ר ניצן סוויד: אינטגרציה, חיזוי, מלאי, מלאי ביטחון, פארטו ואחזקה — כולל דגשים מההקלטות, הבחינה לדוגמה ושאלות התרגול שלו. הנושאים של מצגות 8–11 (אמינות, תדירות אחזקה מונעת, נקודת איזון) אינם במבחן ואינם נבחרים כברירת מחדל",
           f:function(q){return q.s==="ניצן"||q.s==="הקלטות";}},
-  calc:  {name:"🧮 חישובים בלבד",     hint:"רק שאלות שפותרים עם מחשבון — «במבחן יהיו חישובים, לא מסובכים». כל שאלה עם פתרון מלא צעד-צעד",
-          f:function(q){return isCalc(q);}}
+  calc:  {name:"🧮 חישובים בלבד",     hint:"רק שאלות שפותרים עם מחשבון — ניצן: «יש רק חמש או שש שאלות מתמטיות... השאלות הכמותיות הן פשוטות». כל שאלה עם פתרון מלא צעד-צעד",
+          f:function(q){return isCalc(q);}},
+  style: {name:"🎯 בסגנון הבחינה לדוגמה", hint:"שאלות חישוב חדשות מאותם שישה סוגים שהופיעו בבחינה לדוגמה של ניצן, עם מספרים אחרים: תחזית לפי קו נתון, רגרסיה במחשבון ומקדם המתאם, רמת מלאי מקסימלית (מלאי ביטחון ועוד כמות ההזמנה), עלות אחזקה שנתית וזמן השבתה, וממוצע נע משוקלל עם אחוז הפחתה. חמש תשובות לשאלה, כמו אצל ניצן",
+          f:function(q){return q.y===1;}}
 };
 function scopeOK(q){ return SCOPE[sel.src] ? SCOPE[sel.src].f(q) : true; }
 function filterBank(){return BANK.filter(function(x){return sel.topics.indexOf(x.t)>=0 && scopeOK(x);});}
-function countScope(k){return BANK.filter(function(x){return SCOPE[k].f(x);}).length;}
+/* countAll — בכל המאגר; countScope — בנושאים שנבחרו כרגע (זה המספר שעל הכפתור) */
+function countAll(k){return BANK.filter(function(x){return SCOPE[k].f(x);}).length;}
+function countScope(k){return BANK.filter(function(x){return sel.topics.indexOf(x.t)>=0 && SCOPE[k].f(x);}).length;}
 
 document.getElementById("sub").textContent =
-  BANK.length+" שאלות בפורמט המבחן — "+countScope("calc")+" מהן שאלות חישוב"+
-  (countScope("lect")?" ו-"+countScope("lect")+" שאלות לדוגמה של המרצה עצמו":"")+". "+
-  "לפי הסילבוס: 25 שאלות רב-ברירה, כמותיות ואיכותיות, על כל החומר של שני המרצים (60% מהציון).";
+  BANK.length+" שאלות בפורמט המבחן — "+countAll("calc")+" מהן שאלות חישוב"+
+  (countAll("lect")?" ו-"+countAll("lect")+" שאלות לדוגמה של המרצים עצמם":"")+". "+
+  "המבחן: 25 שאלות רב-ברירה — 13 של ניצן (כמחציתן חישוב) ו-12 של שלמה. חומר פתוח, 60% מהציון.";
 /* מערבב את סדר התשובות בכל שאלה, כדי שהתשובה הנכונה לא תהיה תמיד באותו מקום */
 function prepQ(q){
   /* fx — שאלת מרצה שבה תשובה מפנה לתשובות אחרות (״א׳ ו-ב׳ נכונות״): הסדר המקורי נשמר */
-  var order=q.fx?[0,1,2,3]:shuffle([0,1,2,3]);
+  var order=q.o.map(function(_,i){return i;});
+  if(!q.fx)shuffle(order);
   var opts=order.map(function(i){return q.o[i];});
-  return {t:q.t,s:q.s,q:q.q,o:opts,c:order.indexOf(q.c),e:q.e,k:q.k,m:q.m};
+  return {t:q.t,s:q.s,q:q.q,o:opts,c:order.indexOf(q.c),e:q.e,k:q.k,m:q.m,y:q.y};
 }
 function buildQuiz(){
   var arr=filterBank().map(prepQ);
@@ -283,11 +296,12 @@ function setup(){
   var c=E("div",{"class":"card"});
 
   c.appendChild(E("div",{"class":"note"},
-    "<b>המבחן (לפי הסילבוס):</b> 25 שאלות רב-ברירה, כמותיות ואיכותיות, על כל החומר — התיאורטי של שלמה והמודלים של ניצן. "+
-    "ניצן בהרצאה: «במבחן יהיו חישובים, לא מסובכים» — <b>להביא מחשבון</b>.<br>"+
+    "<b>המבחן (ניצן, שיעור הסיכום 6.10):</b> 25 שאלות רב-ברירה — 13 של ניצן ו-12 של שלמה. כמחצית מהשאלות של ניצן כמותיות, כלומר כרבע מהמבחן: «יש רק חמש או שש שאלות מתמטיות», והן «פשוטות». "+
+    "<b>חומר פתוח</b> — המרצה אינו מחלק נוסחאות, מביאים את החומר מאורגן; ו<b>מחשבון</b> שיודעים להפיק ממנו רגרסיה (טלפון אסור).<br>"+
+    "<b>החומר של ניצן למבחן — עד מצגת 7</b>: אינטגרציה, חיזוי, ניהול מלאי, מלאי ביטחון, פארטו ואחזקה. מצגות 8–11 (אמינות, תדירות אחזקה מונעת, נקודת איזון) מסומנות כאן «לא במבחן» ואינן נבחרות כברירת מחדל.<br>"+
     "<b>איך לתרגל:</b> ב<b>מצב תרגול</b> מקבלים משוב והסבר אחרי כל שאלה, אפשר לעבור בחופשיות בין השאלות (הקודמת, הבאה ומפת השאלות), ובסוף הסבב לתרגל רק את השגויות. "+
-    "ב<b>סימולציית מבחן</b> עונים על 25 שאלות (כמו במבחן) ורק בסוף מקבלים ציון וסקירה של כל שגיאה.<br>"+
-    "<b>מאיפה להתחיל:</b> בהיקף <b>⭐ שאלות המרצה</b> — השאלות לדוגמה של שלמה עצמו, עם התשובות שסימן; בהיקף <b>חישובים בלבד</b> — לוודא שכל נוסחה יושבת ביד; אחר כך <b>הכל</b> עם פריסה מאוזנת בין הנושאים."));
+    "ב<b>סימולציית מבחן</b> עונים על 25 שאלות במבנה של המבחן ורק בסוף מקבלים ציון וסקירה של כל שגיאה.<br>"+
+    "<b>מאיפה להתחיל:</b> <b>⭐ הבחינה לדוגמה של ניצן</b> ואחריה <b>🎯 בסגנון הבחינה לדוגמה</b> — אותם סוגי חישוב עם מספרים אחרים; <b>⭐ שאלות המרצים</b> — כולל השאלות של שלמה ממאגר המבחן שלו; ולבסוף <b>סימולציית מבחן</b>."));
 
   /* mode */
   var row1=E("div",{"class":"toolbar"});
@@ -305,8 +319,8 @@ function setup(){
   /* היקף לימוד */
   var row0=E("div",{"class":"toolbar"});
   row0.appendChild(E("span",{"class":"lbl"},"היקף:"));
-  ["all","lect","shlomo","nitsan","calc"].forEach(function(k){
-    if(!countScope(k))return;
+  ["all","lect","nexam","style","calc","shlomo","nitsan"].forEach(function(k){
+    if(!countAll(k))return;
     var b=E("button",{"class":"chip"+(sel.src===k?" active":"")},
       SCOPE[k].name+" <small>"+countScope(k)+"</small>");
     b.onclick=function(){sel.src=k;setup();};
@@ -320,14 +334,21 @@ function setup(){
      מרצה שלם בקליק בלי לעבור על עשרים שבבים. */
   var row2=E("div",{"class":"toolbar"});
   row2.appendChild(E("span",{"class":"lbl"},"נושאים:"));
-  var allOn=sel.topics.length===TOPICS.length;
+  /* ״הכל״ וכפתורי המרצים מתייחסים לנושאי המבחן בלבד; נושא שמסומן ״לא במבחן״ מוצג
+     בשורה נפרדת ונבחר רק בלחיצה עליו. */
+  var EXAM_T=TOPICS.filter(inExam), OUT_T=TOPICS.filter(function(t){return !inExam(t);});
+  var allOn=EXAM_T.every(function(t){return sel.topics.indexOf(t)>=0;});
   var ball=E("button",{"class":"chip"+(allOn?" active":"")},"הכל");
-  ball.onclick=function(){sel.topics=allOn?[]:TOPICS.slice();setup();};
+  ball.onclick=function(){
+    if(allOn) sel.topics=sel.topics.filter(function(t){return EXAM_T.indexOf(t)<0;});
+    else EXAM_T.forEach(function(t){if(sel.topics.indexOf(t)<0)sel.topics.push(t);});
+    setup();
+  };
   row2.appendChild(ball);
   var groups=[["שלמה",function(t){return BANK.some(function(b){return b.t===t&&b.s==="שלמה";});}],
               ["ניצן", function(t){return BANK.some(function(b){return b.t===t&&b.s!=="שלמה";});}]];
   groups.forEach(function(g){
-    var ts=TOPICS.filter(g[1]);
+    var ts=EXAM_T.filter(g[1]);
     if(!ts.length)return;
     var on=ts.every(function(t){return sel.topics.indexOf(t)>=0;});
     var gb=E("button",{"class":"chip"+(on?" active":"")},"כל "+g[0]);
@@ -339,19 +360,26 @@ function setup(){
     row2.appendChild(gb);
   });
   c.appendChild(row2);
-  var row3=E("div",{"class":"toolbar"});
-  row3.appendChild(E("span",{"class":"lbl"},""));
-  TOPICS.forEach(function(t){
-    var on=sel.topics.indexOf(t)>=0;
-    var b=E("button",{"class":"chip"+(on?" active":"")},"<span class=\"iso\">"+t+"</span> <small>"+countBy("t",t)+"</small>");
-    b.onclick=function(){
-      var i=sel.topics.indexOf(t);
-      if(i>=0)sel.topics.splice(i,1);else sel.topics.push(t);
-      setup();
-    };
-    row3.appendChild(b);
-  });
-  c.appendChild(row3);
+  function topicRow(label,list,strip){
+    var row=E("div",{"class":"toolbar"});
+    row.appendChild(E("span",{"class":"lbl"},label));
+    list.forEach(function(t){
+      var on=sel.topics.indexOf(t)>=0;
+      var b=E("button",{"class":"chip"+(on?" active":"")},"<span class=\"iso\">"+(strip?t.replace(" (לא במבחן)",""):t)+"</span> <small>"+countBy("t",t)+"</small>");
+      b.onclick=function(){
+        var i=sel.topics.indexOf(t);
+        if(i>=0)sel.topics.splice(i,1);else sel.topics.push(t);
+        setup();
+      };
+      row.appendChild(b);
+    });
+    c.appendChild(row);
+  }
+  topicRow("",EXAM_T,false);
+  if(OUT_T.length){
+    topicRow("לא במבחן:",OUT_T,true);
+    c.appendChild(E("div",{"class":"scopehint"},"נושאים שהמרצה אמר שלא יהיו במבחן — אצל ניצן החומר למבחן הוא עד מצגת 7. הם אינם נבחרים כברירת מחדל; לחיצה על נושא מוסיפה אותו לתרגול, להעשרה."));
+  }
 
   /* options */
   var row4=E("div",{"class":"toolbar"});
@@ -369,6 +397,12 @@ function setup(){
     });
   }
   if(sel.mode==="exam"){
+    if(sel.count===25){
+      /* מבנה המבחן כפי שניצן תיאר בשיעור הסיכום: 13 שלו (כמחציתן חישוב) ו-12 של שלמה */
+      var rl=E("button",{"class":"chip"+(sel.real?" active":"")},"מבנה המבחן: 13 ניצן (6 חישוב) + 12 שלמה");
+      rl.onclick=function(){sel.real=!sel.real;setup();};
+      row4.appendChild(rl);
+    }
     var bal=E("button",{"class":"chip"+(sel.balanced?" active":"")},"פריסה מאוזנת בין נושאים");
     bal.onclick=function(){sel.balanced=!sel.balanced;setup();};
     row4.appendChild(bal);
@@ -475,7 +509,7 @@ function practiceStart(){
   /* אותה דגימה מאוזנת של המבחן — סבב קצר שמרוכז בשניים-שלושה נושאים
      אינו מייצג, והמאגר אינו מאוזן בין הנושאים. */
   /* שאלות המרצה הן קבוצה קטנה שרוצים לעבור על כולה — בלי דגימה לסבב */
-  if(sel.pcount&&quiz.length>sel.pcount&&sel.src!=="lect")
+  if(sel.pcount&&quiz.length>sel.pcount&&["lect","nexam","style"].indexOf(sel.src)<0)
     quiz=shuffle(balancedPick(quiz,sel.pcount));
   pBegin();
 }
@@ -575,10 +609,24 @@ function balancedPick(arr,n){
   }
   return out;
 }
+/* מבנה המבחן לפי ניצן (6.10): 13 שאלות שלו — כמחציתן חישוב — ו-12 של שלמה.
+   בכל חלק הדגימה מאוזנת בין הנושאים; אם ההיקף שנבחר אינו מספיק לחלק כלשהו, משלימים מהשאר. */
+function realPick(arr){
+  var S=arr.filter(isShlomo),
+      NC=arr.filter(function(q){return !isShlomo(q)&&isCalc(q);}),
+      NT=arr.filter(function(q){return !isShlomo(q)&&!isCalc(q);});
+  var out=balancedPick(S,12).concat(balancedPick(NC,6),balancedPick(NT,7));
+  if(out.length<25){
+    var rest=arr.filter(function(q){return out.indexOf(q)<0;});
+    out=out.concat(balancedPick(rest,25-out.length));
+  }
+  return out;
+}
 function examStart(){
   quiz=buildQuiz();
   if(sel.count&&quiz.length>sel.count)
-    quiz=sel.balanced?shuffle(balancedPick(quiz,sel.count)):quiz.slice(0,sel.count);
+    quiz=(sel.real&&sel.count===25)?shuffle(realPick(quiz)):
+         sel.balanced?shuffle(balancedPick(quiz,sel.count)):quiz.slice(0,sel.count);
   idx=0;ansMap=new Array(quiz.length);
   timeLeft=sel.minutes*60;
   if(sel.minutes)startTimer();

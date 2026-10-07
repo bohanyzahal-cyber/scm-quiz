@@ -70,9 +70,10 @@ dist = {}
 for c in cs:
     dist[c] = dist.get(c, 0) + 1
 print("\nפיזור אינדקס התשובה הנכונה במקור:", dict(sorted(dist.items())))
-lect = {k: len(re.findall(r',m:%d[,}]' % k, bank)) for k in (1, 2, 3)}
+lect = {k: len(re.findall(r',m:%d[,}]' % k, bank)) for k in (1, 2, 3, 4, 5)}
 if sum(lect.values()):
-    print("שאלות המרצה (m): %d מהדף המודפס, %d משוחזרות מהקלטה, %d משוחזרות מתמלול שיעור הסיכום" % (lect[1], lect[2], lect[3]))
+    print("שאלות המרצים (m): שלמה — %d מהדף המודפס, %d משוחזרות מהקלטה, %d משוחזרות מתמלול שיעור הסיכום; "
+          "ניצן — %d מהבחינה לדוגמה, %d משאלות התרגול שצירף" % (lect[1], lect[2], lect[3], lect[4], lect[5]))
 if len(cs) != len(objs):
     print("!! אזהרה: לא כל השאלות נותחו (%d מתוך %d)" % (len(cs), len(objs)))
 
@@ -99,15 +100,16 @@ def update_readme():
     src_line = " · ".join("%s (%d)" % (k, v) for k, v in sorted(srcs.items(), key=lambda x: -x[1]))
     block = (
         "<!-- STATS:START — נוצר אוטומטית על ידי src/build.py, אין לערוך ידנית -->\n"
-        "**%d שאלות** בפורמט המבחן — רב-ברירתי (אמריקאי), 4 תשובות לשאלה.\n\n"
+        "**%d שאלות** בפורמט המבחן — רב-ברירתי (אמריקאי); 4 תשובות לשאלה, ו-5 (א׳–ה׳) בשאלות בפורמט הבחינה של ניצן.\n\n"
         "%s\n\n"
         "**לפי מקור:** %s\n"
         % (len(objs), "\n".join(lines), src_line)
     )
     if sum(lect.values()):
-        block += ("\n**⭐ שאלות המרצה:** %d — %d כלשונן מהדף המודפס שהציג בשיעור, "
-                  "%d משוחזרות מהקלטת השיעור שבו הקריא שאלות, %d משוחזרות מתמלול שיעור הסיכום (נספרות בתוך ״שלמה״).\n"
-                  % (sum(lect.values()), lect[1], lect[2], lect[3]))
+        block += ("\n**⭐ שאלות המרצים:** %d. שלמה — %d כלשונן מהדף המודפס שהציג בשיעור, "
+                  "%d משוחזרות מהקלטת השיעור שבו הקריא שאלות, %d משוחזרות מתמלול שיעור הסיכום (נספרות בתוך ״שלמה״). "
+                  "ניצן — %d מהבחינה לדוגמה שפתר בשיעור הסיכום (6.10) ו-%d משאלות התרגול שצירף אליה (נספרות בתוך ״ניצן״).\n"
+                  % (sum(lect.values()), lect[1], lect[2], lect[3], lect[4], lect[5]))
     open(path, "w", encoding="utf-8").write(txt[:i] + block + txt[j:])
     print("עודכן:", path)
 
@@ -126,9 +128,10 @@ const err=[], seen={};
 BANK.forEach((q,i)=>{
   const at=`#${i} ${(q.q||'').slice(0,40)}`;
   if(!q.t||!q.s||!q.q||!q.e)             err.push(at+' — שדה חסר');
-  if(!Array.isArray(q.o)||q.o.length!==4) err.push(at+' — אין בדיוק 4 אפשרויות');
-  else if(new Set(q.o).size!==4)          err.push(at+' — אפשרות כפולה');
-  if(typeof q.c!=='number'||q.c<0||q.c>3) err.push(at+' — c מחוץ לתחום');
+  /* ארבע אפשרויות; חמש (א׳–ה׳) בשאלות בפורמט הבחינה של ניצן */
+  if(!Array.isArray(q.o)||(q.o.length!==4&&q.o.length!==5)) err.push(at+' — צריך 4 או 5 אפשרויות');
+  else if(new Set(q.o).size!==q.o.length) err.push(at+' — אפשרות כפולה');
+  if(typeof q.c!=='number'||q.c<0||q.c>=(q.o||[]).length) err.push(at+' — c מחוץ לתחום');
   if(!q.fx&&(q.o||[]).some(o=>POS.test(o))) err.push(at+' — מסיח תלוי-מיקום');
   /* כפילות ניסוח: נוצרת כשמאריכים מסיח בטקסט שכבר מופיע בסופו. */
   (q.o||[]).forEach((o)=>{
@@ -194,7 +197,7 @@ except Exception as e:
 CHECK = r"""
 const fs=require('fs');
 eval(fs.readFileSync(process.argv[2],'utf8'));
-const n=BANK.length, rank=[0,0,0,0];
+const n=BANK.length, rank=[0,0,0,0,0];
 let long=0, short=0, outlierHit=0;
 const outliers=[];
 BANK.forEach((q,qi)=>{
@@ -208,7 +211,7 @@ BANK.forEach((q,qi)=>{
   const gap=(L[q.c]-avg)/avg;
   if(Math.abs(gap)>=0.40) outliers.push({i:qi,q:q.q.slice(0,42),pct:Math.round(gap*100)});
   /* האם ניתן לנצל: "בחר את האפשרות שאורכה חורג ביותר מממוצע הארבע". */
-  const mean=L.reduce((a,b)=>a+b,0)/4;
+  const mean=L.reduce((a,b)=>a+b,0)/L.length;
   const far=L.map((l,i)=>[Math.abs(l-mean),i]).sort((a,b)=>b[0]-a[0])[0][1];
   if(far===q.c) outlierHit++;
 });

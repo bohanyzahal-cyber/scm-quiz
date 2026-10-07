@@ -7,14 +7,17 @@
   T     — שם הנושא (שדה t)
   S     — מקור ברירת מחדל (שדה s)
   KEEP  — (אופציונלי) נתיב לקובץ שורות JS קיימות שנשמרות בראש הבנק
-  Q     — רשימת מילונים: q (שאלה), a (התשובה הנכונה), d (שלושה מסיחים),
-          e (הסבר), ואופציונלי s (מקור), t (נושא), k ("calc") ו-m (שאלת מרצה:
-          1 = כלשונה מהדף, 2 = שוחזרה מהקלטה, 3 = שוחזרה מתמלול שיעור הסיכום).
+  SEED  — (אופציונלי) זרע לסידור התשובות; ברירת המחדל היא שם הנושא T
+  Q     — רשימת מילונים: q (שאלה), a (התשובה הנכונה), d (שלושה או ארבעה מסיחים —
+          ארבעה בשאלות בפורמט של ניצן, חמש תשובות א׳–ה׳), e (הסבר), ואופציונלי
+          s (מקור), t (נושא), k ("calc") ו-m (שאלת מרצה: 1 = כלשונה מהדף של שלמה,
+          2 = שוחזרה מהקלטה, 3 = שוחזרה מתמלול שיעור הסיכום, 4 = מהבחינה לדוגמה
+          של ניצן, 5 = משאלות התרגול שניצן צירף לבחינה לדוגמה).
           שאלת מרצה שבה תשובה מפנה לתשובות אחרות (״א׳ ו-ב׳ נכונות״) נכתבת
-          עם o (ארבע האפשרויות בסדר המקורי) ו-c (אינדקס הנכונה) במקום a/d,
+          עם o (האפשרויות בסדר המקורי) ו-c (אינדקס הנכונה) במקום a/d,
           ומקבלת fx:1 — האפליקציה לא מערבבת אותה.
 
-הכלי מציב את התשובה הנכונה במיקום מאוזן (0–3) ומדפיס בדיקת אורך:
+הכלי מציב את התשובה הנכונה במיקום מאוזן ומדפיס בדיקת אורך:
 L = הנכונה ארוכה מכל המסיחים ביותר מ-2 תווים, S = קצרה מכולם ביותר מ-2.
 """
 import sys, io, json, random, importlib.util, os
@@ -36,16 +39,16 @@ def js(x):
 errs = []
 for i, it in enumerate(Q):
     if "o" in it:                               # סדר מקורי קבוע: o + c במקום a + d
-        if len(it["o"]) != 4 or it.get("c") not in (0, 1, 2, 3):
-            errs.append("#%d — סדר קבוע: צריך 4 אפשרויות ב-o ו-c בין 0 ל-3" % i)
+        if len(it["o"]) not in (4, 5) or it.get("c") not in range(len(it["o"])):
+            errs.append("#%d — סדר קבוע: צריך 4 או 5 אפשרויות ב-o ו-c בתחום" % i)
             continue
         it["a"] = it["o"][it["c"]]
         it["d"] = [x for k, x in enumerate(it["o"]) if k != it["c"]]
     for f in ("q", "a", "d", "e"):
         if f not in it: errs.append("#%d חסר שדה %s" % (i, f))
-    if len(it.get("d", [])) != 3: errs.append("#%d — צריך בדיוק 3 מסיחים" % i)
+    if len(it.get("d", [])) not in (3, 4): errs.append("#%d — צריך 3 או 4 מסיחים" % i)
     allo = [it.get("a")] + list(it.get("d", []))
-    if len(set(allo)) != 4: errs.append("#%d — אפשרות כפולה" % i)
+    if len(set(allo)) != len(allo): errs.append("#%d — אפשרות כפולה" % i)
     for fld in [it.get("q",""), it.get("e",""), it.get("a","")] + list(it.get("d", [])):
         if '"' in fld: errs.append("#%d — מרכאות ASCII בתוך טקסט: %s" % (i, fld[:40]))
 if errs:
@@ -57,15 +60,34 @@ for l in keep:
     import re
     m = re.search(r",c:(\d),e:", l)
     if m: kept_c.append(int(m.group(1)))
-rng = random.Random(T)
-need = len(Q)
-counts = [kept_c.count(k) + sum(1 for it in Q if "o" in it and it["c"] == k) for k in range(4)]
-pos = []
-for _ in range(need):
-    lo = min(counts)
-    cand = [k for k in range(4) if counts[k] == lo]
-    k = rng.choice(cand); pos.append(k); counts[k] += 1
-rng.shuffle(pos)
+rng = random.Random(getattr(D, "SEED", T))   # SEED — כששם הנושא משתנה ורוצים לשמור על אותו סידור תשובות
+if all(len(it["d"]) == 3 for it in Q):
+    # בנק של ארבע אפשרויות בלבד — האלגוריתם המקורי, כדי שבנייה חוזרת תיתן אותו פלט בדיוק
+    need = len(Q)
+    counts = [kept_c.count(k) + sum(1 for it in Q if "o" in it and it["c"] == k) for k in range(4)]
+    pos = []
+    for _ in range(need):
+        lo = min(counts)
+        cand = [k for k in range(4) if counts[k] == lo]
+        k = rng.choice(cand); pos.append(k); counts[k] += 1
+    rng.shuffle(pos)
+else:
+    # יש גם שאלות של חמש אפשרויות: איזון נפרד לכל גודל, והתשובה הנכונה מתפזרת באופן אחיד בין המיקומים
+    counts = {4: [kept_c.count(k) for k in range(4)], 5: [0] * 5}
+    for it in Q:
+        if "o" in it:
+            counts[len(it["o"])][it["c"]] += 1
+    pos = [0] * len(Q)
+    for g in (4, 5):
+        idxs = [i for i, it in enumerate(Q) if "o" not in it and len(it["d"]) + 1 == g]
+        vals = []
+        for _ in idxs:
+            lo = min(counts[g])
+            cand = [k for k in range(g) if counts[g][k] == lo]
+            k = rng.choice(cand); vals.append(k); counts[g][k] += 1
+        rng.shuffle(vals)                      # שהמיקום לא ייגזר מסדר הכתיבה
+        for i, v in zip(idxs, vals):
+            pos[i] = v
 
 # ---- בידוד רצפים לטיניים/יווניים (bidi) ----
 # בטקסט עברי, מספר שבא אחרי אות לטינית/יוונית ״נבלע״ ברצף משמאל לימין:
@@ -122,10 +144,11 @@ for i, it in enumerate(Q):
     if "o" in it:                               # סדר מקורי קבוע
         opts, c = list(it["o"]), it["c"]
     s = it.get("s", S)
-    line = "{t:%s,s:%s,q:%s,o:[%s],c:%d,e:%s%s%s%s}" % (
+    line = "{t:%s,s:%s,q:%s,o:[%s],c:%d,e:%s%s%s%s%s}" % (
         js(it.get("t", T)), js(s), js(iso(it["q"])), ",".join(js(iso(o)) for o in opts), c, js(iso(it["e"])),
         (",k:" + js(it["k"])) if it.get("k") else "",
         (",m:%d" % it["m"]) if it.get("m") else "",
+        ",y:1" if it.get("y") else "",          # y — שאלה חדשה בסגנון הבחינה לדוגמה של ניצן
         ",fx:1" if "o" in it else "")
     lines.append(line)
     la, ld = vlen(it["a"]), [vlen(x) for x in it["d"]]
@@ -140,7 +163,7 @@ io.open(out_path, "w", encoding="utf-8").write(out)
 
 nL, nS = flags.count("L"), flags.count("S")
 n = len(Q)
-cc = [0]*4
+cc = [0]*5
 for l in body:
     import re
     cc[int(re.search(r",c:(\d),e:", l).group(1))] += 1

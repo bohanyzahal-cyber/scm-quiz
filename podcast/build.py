@@ -65,7 +65,17 @@ PLANNED = [
     ("09", "שלמה — הזמנות לקוח ולוגיסטיקה"),
     ("10", "שלמה — אסטרטגיה, זמישות וארגז הכלים"),
     ("11", "חזרה למבחן — מלכודות החישוב וטעויות בשקפים"),
+    ("12", "עדכון לפני המבחן — מבנה המבחן והבחינה לדוגמה של ניצן"),
 ]
+
+# הערה קצרה שמוצגת בכרטיס הפרק בדף הנגן. נוספה ב-7.10.2026, אחרי שיעור הסיכום של ניצן (6.10):
+# החומר שלו למבחן הוא עד מצגת 7, ולכן חלק מהפרקים שהוקלטו קודם אינם במבחן.
+EP_NOTE = {
+    "05": "החלק על חישובי האמינות (טור ומקביל) — לא במבחן. גישות האחזקה והעלויות — כן.",
+    "06": "לא במבחן (מצגות 9–11) — להעשרה בלבד.",
+    "11": "הוקלט לפני שיעור הסיכום. מה שנאמר בו על המבחן ועל היקף החומר מתעדכן בפרק 12.",
+    "12": "חדש — מתוך שיעור הסיכום של ניצן (6.10): מבנה המבחן, מה לא יהיה בו, וסוגי החישוב שבבחינה לדוגמה.",
+}
 
 # ffmpeg מקודד הכל מחדש לפרמטר אחיד, כך שגם קטעי השקט מתחברים חלק
 AUDIO_ARGS = ["-c:a", "libmp3lame", "-b:a", "64k", "-ar", "24000", "-ac", "1"]
@@ -256,13 +266,15 @@ audio{width:100%;height:40px;display:block;}
 .soon .num{background:var(--surface2);color:var(--muted);}
 .soon .ttl{font-weight:400;color:var(--muted);}
 .note{color:var(--muted);font-size:13px;margin-top:24px;border-top:1px solid var(--border);padding-top:14px;}
+.upd{background:var(--accentSoft);border-right:3px solid var(--accent);border-radius:0 10px 10px 0;padding:10px 14px;margin:0 0 16px;font-size:13.5px;}
+.epnote{font-size:12.5px;color:var(--muted);margin:-4px 0 9px;}
 </style>
 </head>
 <body>
 <div class="wrap">
 <div class="top"><div>
 <h1>פודקאסט — __COURSE__</h1>
-<p class="sub">פרק לכל נושא, בשני קולות — שישה פרקים לניצן, ארבעה לשלמה ופרק חזרה. בסוף כל פרק: שאלות לדרך, עם שקט קצר לחשוב לפני התשובה.</p>
+<p class="sub">פרק לכל נושא, בשני קולות — שישה פרקים לניצן, ארבעה לשלמה, פרק חזרה ופרק עדכון מלפני המבחן. בסוף כל פרק: שאלות לדרך, עם שקט קצר לחשוב לפני התשובה.</p>
 </div><button class="iconbtn" id="theme" title="מצב כהה / בהיר">◐</button></div>
 """
 
@@ -273,6 +285,7 @@ INDEX_NAV = """<div class="nav">
 <div class="speed">מהירות השמעה:
 <button type="button" dir="ltr" data-r="1">×1</button><button type="button" dir="ltr" data-r="1.25">×1.25</button><button type="button" dir="ltr" data-r="1.5">×1.5</button>
 </div>
+<div class="upd"><b>עדכון 7.10.2026 — כדאי להתחיל מפרק 12.</b> אחרי שהוקלטו פרקים 1–11 העביר ניצן שיעור סיכום (6.10), הציג בחינה לדוגמה ופירט את מבנה המבחן: 13 שאלות שלו ו-12 של שלמה, בחומר פתוח, והחומר שלו למבחן הוא <b>עד מצגת 7</b>. לכן חישובי האמינות שבפרק 5 וכל פרק 6 אינם במבחן, ומה שנאמר בפרק 11 על המבחן (״אין מיקוד ואין שאלות לדוגמה״) כבר אינו מעודכן.</div>
 """
 
 INDEX_TAIL = """<p class="note">אפשר להוריד את הפרקים ולהאזין בלי אינטרנט. הקבצים מתויגים כאלבום אחד לפי מספר פרק, כך שכל נגן ישמור על הסדר.
@@ -335,6 +348,7 @@ def write_index():
             f'<bdi class="num">{num}</bdi>'
             f'<span class="ttl">{html.escape(title)}</span>'
             f'<bdi class="dur">{int(d // 60)}:{int(d % 60):02d}</bdi></div>'
+            + (f'<div class="epnote">{html.escape(EP_NOTE[num])}</div>' if num in EP_NOTE else '') +
             f'<audio controls preload="none" src="{href}"></audio>'
             f'<div class="row"><a href="{href}" download="{html.escape(name, quote=True)}">⬇ הורדה</a>'
             f'<bdi>{size:.1f} MB</bdi></div></div>\n')
