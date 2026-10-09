@@ -29,7 +29,8 @@ def for_course_folder(page):
     לדף הנוסחאות יש שם אחר. בלי ההחלפה הזו הקישור אליו שבור."""
     return (page.replace('href="נוסחאות.html"',
                          'href="דף נוסחאות - ניהול שרשרת ההספקה.html"')
-                .replace('href="podcast/index.html"', 'href="scm-quiz/podcast/index.html"'))
+                .replace('href="podcast/index.html"', 'href="scm-quiz/podcast/index.html"')
+            .replace('href="booklet.pdf"', 'href="חוברת למבחן - ניהול שרשרת ההספקה.pdf"'))
 
 for i, t in enumerate(TARGETS):
     page = html if i == 0 else for_course_folder(html)
@@ -42,7 +43,8 @@ if os.path.exists(FORMULAS):
     dst = os.path.join(COURSE, "דף נוסחאות - ניהול שרשרת ההספקה.html")
     sheet = open(FORMULAS, encoding="utf-8").read()
     sheet = (sheet.replace('href="index.html"', 'href="בוחן תרגול - ניהול שרשרת ההספקה.html"')
-                  .replace('href="podcast/index.html"', 'href="scm-quiz/podcast/index.html"'))
+                  .replace('href="podcast/index.html"', 'href="scm-quiz/podcast/index.html"')
+            .replace('href="booklet.pdf"', 'href="חוברת למבחן - ניהול שרשרת ההספקה.pdf"'))
     open(dst, "w", encoding="utf-8").write(sheet)
     print("נכתב:", dst)
 print("גודל: %.0f KB" % (len(html) / 1024))

@@ -9,7 +9,7 @@
   * נספח: שאלות המאגר של שלמה — שאלה והתשובה הנכונה בלבד.
   * שני מעברים: במעבר הראשון מודפס PDF ונמצא העמוד של כל §; בשני העמודים נכתבים לתוכן העניינים ולמפתח.
   * בסוף מוטבעים בראש כל עמוד מספר העמוד והפרקים שבו (לדפדוף מהיר).
-הפלט: ״חוברת למבחן - ניהול שרשרת ההספקה.pdf״ בתיקיית הקורס.
+הפלט: ״חוברת למבחן - ניהול שרשרת ההספקה.pdf״ בתיקיית הקורס, ו-booklet.pdf בשורש הריפו (מתפרסם באתר).
 """
 import io, os, re, sys, json, subprocess, tempfile
 import fitz
@@ -233,6 +233,7 @@ for n, page in enumerate(doc, 1):
         page.insert_text((28, 30), label, fontsize=15, fontname="hebo")
     page.insert_text((w / 2 - 8, page.rect.height - 14), "%d / %d" % (n, len(doc)), fontsize=8, fontname="helv")
 doc.save(OUT, garbage=3, deflate=True)
+doc.save(os.path.join(ROOT, "booklet.pdf"), garbage=3, deflate=True)      # העותק שמתפרסם באתר
 print("נכתב: %s — %d עמודים (§1 מתחיל בעמ׳ %d); %d מונחים במפתח, %d כרטיסים" % (OUT, len(doc), first, len(index), len(cards)))
 for c, t, _ in toc:
     print("  %-4s עמ׳ %-3d %s" % (c, pages[c], t))
