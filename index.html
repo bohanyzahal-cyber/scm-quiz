@@ -927,8 +927,13 @@ var SRC_META={
          3 — שוחזרו מתמלול שיעור הסיכום.
    ניצן: 4 — מהבחינה לדוגמה שפתר בשיעור הסיכום (6.10), חמש תשובות לשאלה;
          5 — משאלות התרגול שצירף לאותו מסמך. */
-var LECT_META={1:"⭐ שאלת המרצה — מדף השאלות לדוגמה",2:"⭐ שאלת המרצה — שוחזרה מהקלטת השיעור",3:"⭐ שאלת המרצה — שוחזרה מתמלול שיעור הסיכום",
-               4:"⭐ ניצן — מהבחינה לדוגמה (שיעור 6.10)",5:"⭐ ניצן — משאלות התרגול שצירף לבחינה לדוגמה"};
+/* מקור כל שאלת מרצה — מוצג ליד השאלה בתרגול, במבחן ובהדפסה */
+var LECT_META={1:"⭐ שלמה — מילה במילה מדף השאלות המודפס שהציג",2:"⭐ שלמה — שוחזרה מהקלטת השיעור שבו הקריא שאלות",3:"⭐ שלמה — שוחזרה מתמלול שיעור הסיכום",
+               4:"⭐ ניצן — מהבחינה לדוגמה (נפתרה בשיעור 6.10)",5:"⭐ ניצן — מהבחינה לדוגמה (שאלות עיוניות 9–14)"};
+function lectLabel(q){
+  if((q.m===4||q.m===5)&&q.t.indexOf("הוסרו")>=0) return "⭐ ניצן — מטיוטת הבחינה לדוגמה (הוסרה מהגרסה הסופית)";
+  return LECT_META[q.m]||LECT_META[1];
+}
 function isLect(q){return !!q.m;}
 function isShlomo(q){return q.s==="שלמה";}
 var app=document.getElementById("app");
@@ -1176,7 +1181,7 @@ function printSheet(withAnswers){
         arr.length+" שאלות · "+(SCOPE[sel.src]?SCOPE[sel.src].name:sel.src)+
         " · "+(withAnswers?"עם תשובות והסברים":"ללא תשובות")+"</div></div>";
   arr.forEach(function(q,i){
-    h+='<div class="pq"><div class="pt"><span class="iso">'+q.t+'</span>'+(isCalc(q)?' · 🧮 חישוב':'')+(isLect(q)?' · ⭐ שאלת המרצה':'')+'</div>'+
+    h+='<div class="pq"><div class="pt"><span class="iso">'+q.t+'</span>'+(isCalc(q)?' · 🧮 חישוב':'')+(isLect(q)?' · '+lectLabel(q):'')+'</div>'+
        '<div><span class="pn">'+(i+1)+'.</span> '+q.q+'</div>';
     q.o.forEach(function(o,k){ h+='<div class="po">'+LET[k]+". "+o+"</div>"; });
     if(withAnswers)
@@ -1198,7 +1203,7 @@ function metaRow(q){
   var r=E("div",{"class":"qmeta"});
   r.innerHTML='<span class="pill"><span class="iso">'+q.t+'</span></span>'+
     (isLect(q)
-      ? '<span class="pill" style="background:var(--lecBg);color:var(--lecTx);font-weight:650">'+(LECT_META[q.m]||LECT_META[1])+'</span>'
+      ? '<span class="pill" style="background:var(--lecBg);color:var(--lecTx);font-weight:650">'+lectLabel(q)+'</span>'
       : '<span class="pill" style="background:'+srcBg(q.s)+';color:'+srcFg(q.s)+'">'+((SRC_META[q.s]||{}).full||q.s)+'</span>')+
     (isCalc(q)?'<span class="pill" style="background:var(--warnBg);color:var(--warnTx)">🧮 חישוב — מחשבון</span>':'');
   return r;
