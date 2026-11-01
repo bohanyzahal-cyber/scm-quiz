@@ -46,17 +46,21 @@ for p in parts:
 # ---- נספח: המאגר של שלמה (שאלה + התשובה הנכונה)
 js = ("const fs=require('fs');const B=[];(new Function('BANK',fs.readFileSync(process.argv[1],'utf8')"
       ".replace(/^\\s*(var|let|const)\\s+BANK\\s*=.*$/m,'')))(B);"
-      "console.log(JSON.stringify(B.filter(q=>q.m).map(q=>({t:q.t,q:q.q,a:q.o[q.c]}))))")
+      "console.log(JSON.stringify(B.filter(q=>q.m).map(q=>({t:q.t,q:q.q,a:q.o[q.c],m:q.m}))))")
 bank = json.loads(subprocess.run(["node", "-e", js, os.path.join(ROOT, "src", "bank22.js")],
                                  capture_output=True, encoding="utf-8").stdout)
 by = {}
 for q in bank:
     by.setdefault(q["t"], []).append(q)
+# מקור כל שאלה (שדה m בבנק 22)
+SRCTAG = {1: "דף", 2: "הקלטה", 3: "תמלול"}
 app = ['<div class="note">שלמה: שאלות המבחן נלקחות ממאגר של 76 שאלות כאלה, והסדר מעורבב. כאן 38 השאלות שהוצגו או הוקראו בשיעורים — '
-       'השאלה והתשובה הנכונה בלבד. לשים לב למילים <b>אינו</b> / <b>הינו</b> בשאלה שבמבחן: הניסוח עשוי להתהפך.</div>']
+       'השאלה והתשובה הנכונה בלבד. לשים לב למילים <b>אינו</b> / <b>הינו</b> בשאלה שבמבחן: הניסוח עשוי להתהפך.<br>'
+       '<b>מקור:</b> <b>דף</b> — הועתקה מילה במילה מדף השאלות המודפס שהציג בשיעור; <b>הקלטה</b> — שוחזרה מהסרטונים של השיעור שבו הקריא שאלות; '
+       '<b>תמלול</b> — שוחזרה מתמלול שיעור הסיכום של הכיתה השנייה. בשני האחרונים התשובה היא זו שאישר, והניסוח קרוב אך לא בהכרח מדויק.</div>']
 for t, qs in by.items():
-    rows = "".join("<tr><td>%s</td><td><b>%s</b></td></tr>" % (q["q"], q["a"]) for q in qs)
-    app.append('<div class="card wide"><h3>%s</h3><table class="qa"><tr><th>השאלה</th><th>התשובה הנכונה</th></tr>%s</table></div>' % (t, rows))
+    rows = "".join('<tr><td class="src">%s</td><td>%s</td><td><b>%s</b></td></tr>' % (SRCTAG[q["m"]], q["q"], q["a"]) for q in qs)
+    app.append('<div class="card wide"><h3>%s</h3><table class="qa"><tr><th class="src">מקור</th><th>השאלה</th><th>התשובה הנכונה</th></tr>%s</table></div>' % (t, rows))
 secs.append(["shq", "שלמה — שאלות ממאגר המבחן <small>שאלה ותשובה נכונה</small>", "\n".join(app)])
 
 # ---- מספור § לפרקים ולכרטיסים
@@ -139,7 +143,8 @@ tr{break-inside:avoid}
 ul{margin:1mm 0;padding-right:5mm}li{margin:0.4mm 0}
 .tag{display:inline-block;font-size:7.5pt;padding:0 2mm;border:0.2mm solid #888;border-radius:3mm;color:#333;margin-right:1mm;font-weight:400}
 .k{font-weight:700}
-.qa td:first-child{width:58%}
+.qa td:nth-child(2){width:52%}
+.qa .src{width:13mm;text-align:center;font-size:8pt;font-weight:700;white-space:nowrap}
 /* עמוד השער */
 .front h1{margin-bottom:1mm}
 .how{border:0.5mm solid #000;border-radius:2mm;padding:2mm 4mm;margin:2mm 0 3mm;font-size:10pt}
