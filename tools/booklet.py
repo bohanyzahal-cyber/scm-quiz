@@ -49,19 +49,36 @@ js = ("const fs=require('fs');const B=[];(new Function('BANK',fs.readFileSync(pr
       "console.log(JSON.stringify(B.filter(q=>q.m).map(q=>({t:q.t,q:q.q,a:q.o[q.c],m:q.m}))))")
 bank = json.loads(subprocess.run(["node", "-e", js, os.path.join(ROOT, "src", "bank22.js")],
                                  capture_output=True, encoding="utf-8").stdout)
-by = {}
-for q in bank:
-    by.setdefault(q["t"], []).append(q)
-# מקור כל שאלה (שדה m בבנק 22)
+# במבחן הנושא לא כתוב ליד השאלה — לכן הנספח ממוין לפי מילה בולטת מתוך השאלה (tools/shq_keywords.py),
+# וכל שאלה מופיעה תחת כמה מילים.
+sys.path.insert(0, HERE)
+from shq_keywords import KW
 SRCTAG = {1: "דף", 2: "הקלטה", 3: "תמלול"}
-app = ['<div class="note">שלמה: שאלות המבחן נלקחות ממאגר של 76 שאלות כאלה, והסדר מעורבב. כאן 38 השאלות שהוצגו או הוקראו בשיעורים — '
-       'השאלה והתשובה הנכונה בלבד. לשים לב למילים <b>אינו</b> / <b>הינו</b> בשאלה שבמבחן: הניסוח עשוי להתהפך.<br>'
-       '<b>מקור:</b> <b>דף</b> — הועתקה מילה במילה מדף השאלות המודפס שהציג בשיעור; <b>הקלטה</b> — שוחזרה מהסרטונים של השיעור שבו הקריא שאלות; '
-       '<b>תמלול</b> — שוחזרה מתמלול שיעור הסיכום של הכיתה השנייה. בשני האחרונים התשובה היא זו שאישר, והניסוח קרוב אך לא בהכרח מדויק.</div>']
-for t, qs in by.items():
-    rows = "".join('<tr><td class="src">%s</td><td>%s</td><td><b>%s</b></td></tr>' % (SRCTAG[q["m"]], q["q"], q["a"]) for q in qs)
-    app.append('<div class="card wide"><h3>%s</h3><table class="qa"><tr><th class="src">מקור</th><th>השאלה</th><th>התשובה הנכונה</th></tr>%s</table></div>' % (t, rows))
-secs.append(["shq", "שלמה — שאלות ממאגר המבחן <small>שאלה ותשובה נכונה</small>", "\n".join(app)])
+rows = []
+for q in bank:
+    plain = strip(q["q"])
+    hit = [kw for key, kw in KW if key in plain]
+    assert len(hit) == 1, ("מילות מפתח: אין התאמה יחידה", plain, len(hit))
+    for k in hit[0]:
+        rows.append((k, q))
+assert len(KW) == len(bank), (len(KW), len(bank))
+def sortkey(r):
+    k = r[0].replace("״", "").replace("׳", "")
+    return (0 if re.match("[א-ת]", k) else 1, k.lower())
+rows.sort(key=sortkey)
+trs, last = [], None
+for k, q in rows:
+    head = k[0].upper()
+    if head != last:
+        trs.append('<tr class="lt"><td colspan="3">%s</td></tr>' % head)
+        last = head
+    trs.append('<tr><td class="kw">%s</td><td>%s <span class="srcs">(%s)</span></td><td><b>%s</b></td></tr>' % (k, q["q"], SRCTAG[q["m"]], q["a"]))
+app = ['<div class="note"><b>איך מחפשים:</b> בוחרים בשאלה שבמבחן את המילה הכי ייחודית (מונח, שם, ראשי תיבות) ומדפדפים אליה לפי הא״ב — '
+       'עברית ואחריה אנגלית. כל שאלה מופיעה תחת כמה מילים. <b>שימו לב לאינו / הינו</b>: הניסוח במבחן עשוי להתהפך.<br>'
+       'שלמה: שאלות המבחן נלקחות ממאגר של 76 שאלות, והסדר מעורבב. כאן 38 השאלות שהוצגו או הוקראו בשיעורים. '
+       'בסוגריים המקור: <b>דף</b> — מילה במילה מדף השאלות שהציג; <b>הקלטה</b> / <b>תמלול</b> — שוחזרה מהשיעור, והתשובה היא זו שאישר.</div>',
+       '<div class="card wide"><h3>לפי א״ב — מילה מתוך השאלה</h3><table class="qa kwt"><tr><th>מילת מפתח</th><th>השאלה</th><th>התשובה הנכונה</th></tr>%s</table></div>' % "".join(trs)]
+secs.append(["shq", "שלמה — שאלות ממאגר המבחן <small>לפי א״ב של מילה מתוך השאלה</small>", "\n".join(app)])
 
 # ---- מספור § לפרקים ולכרטיסים
 cards = []            # (code, כותרת, טקסט הכרטיס)
@@ -145,6 +162,11 @@ ul{margin:1mm 0;padding-right:5mm}li{margin:0.4mm 0}
 .k{font-weight:700}
 .qa td:nth-child(2){width:52%}
 .qa .src{width:13mm;text-align:center;font-size:8pt;font-weight:700;white-space:nowrap}
+.kwt td{padding:0.35mm 1.6mm;font-size:8.8pt;line-height:1.3}
+.kwt td.kw{width:30mm;font-weight:800}
+.kwt td:nth-child(2){width:50%}
+.kwt tr.lt td{background:#000;color:#fff;font-weight:800;font-size:8.5pt;padding:0 2mm;line-height:1.25}
+.kwt .srcs{font-size:7.5pt;color:#555}
 /* עמוד השער */
 .front h1{margin-bottom:1mm}
 .how{border:0.5mm solid #000;border-radius:2mm;padding:2mm 4mm;margin:2mm 0 3mm;font-size:10pt}
@@ -177,7 +199,7 @@ def render(pages):
     front = ('<div class="front"><h1>חוברת למבחן — ניהול שרשרת ההספקה</h1>'
              '<div class="how"><b>איך מוצאים מהר:</b> (1) שאלה עם מספרים — קודם <b>§1</b>: סוגי החישוב של ניצן והפתרונות של הבחינה לדוגמה. '
              '(2) מונח או נוסחה — <b>מפתח המונחים</b> שבעמוד הבא: ליד כל מונח מספר הכרטיס (§) ו<b>מספר העמוד</b> בהדגשה. '
-             '(3) שאלה של שלמה — הנספח האחרון: שאלות המאגר עם התשובה הנכונה. '
+             '(3) שאלה של שלמה — הנספח האחרון: שאלות המאגר לפי א״ב של מילה מתוך השאלה, עם התשובה הנכונה. '
              'בראש כל עמוד מודפסים מספר העמוד והפרקים שבו. המבחן: 25 שאלות — 13 של ניצן (כ-6 חישוב) ו-12 של שלמה.</div>'
              '<table class="toc"><tr><th>§</th><th>הפרק</th><th>עמ׳</th></tr>%s</table></div>' % rows)
     index_html = ('<section><h2>מפתח מונחים <small>§ הכרטיס ומספר העמוד (מודגש)</small></h2>'

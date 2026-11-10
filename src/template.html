@@ -470,7 +470,7 @@ function printSheet(withAnswers){
         arr.length+" שאלות · "+(SCOPE[sel.src]?SCOPE[sel.src].name:sel.src)+
         " · "+(withAnswers?"עם תשובות והסברים":"ללא תשובות")+"</div></div>";
   arr.forEach(function(q,i){
-    h+='<div class="pq"><div class="pt"><span class="iso">'+q.t+'</span>'+(isCalc(q)?' · 🧮 חישוב':'')+(isLect(q)?' · '+lectLabel(q):'')+'</div>'+
+    h+='<div class="pq">'+(withAnswers?'<div class="pt"><span class="iso">'+q.t+'</span>'+(isCalc(q)?' · 🧮 חישוב':'')+(isLect(q)?' · '+lectLabel(q):'')+'</div>':'')+  /* בלי תשובות — בלי נושא, כמו במבחן */
        '<div><span class="pn">'+(i+1)+'.</span> '+q.q+'</div>';
     q.o.forEach(function(o,k){ h+='<div class="po">'+LET[k]+". "+o+"</div>"; });
     if(withAnswers)
@@ -660,7 +660,7 @@ function eRender(){
   st.innerHTML="<span>שאלה <b>"+(idx+1)+"</b> / <b>"+quiz.length+"</b></span><span>נענו: <b>"+nAns+"</b></span>";
   c.appendChild(st);
   c.appendChild(bar(nAns/quiz.length));
-  c.appendChild(metaRow(q));
+  /* בלי נושא ומקור — כמו בטופס המבחן האמיתי, כדי לתרגל זיהוי לבד */
   c.appendChild(E("div",{"class":"qtext"},q.q));
 
   var box=E("div");
