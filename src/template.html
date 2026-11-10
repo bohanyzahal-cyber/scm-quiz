@@ -253,16 +253,20 @@ var SCOPE={
   calc:  {name:"🧮 חישובים בלבד",     hint:"רק שאלות שפותרים עם מחשבון — ניצן: «יש רק חמש או שש שאלות מתמטיות... השאלות הכמותיות הן פשוטות». כל שאלה עם פתרון מלא צעד-צעד",
           f:function(q){return isCalc(q);}},
   style: {name:"🎯 בסגנון הבחינה לדוגמה", hint:"שאלות חישוב חדשות מאותם שישה סוגים שהופיעו בבחינה לדוגמה של ניצן, עם מספרים אחרים: תחזית לפי קו נתון, רגרסיה במחשבון ומקדם המתאם, רמת מלאי מקסימלית (מלאי ביטחון ועוד כמות ההזמנה), עלות אחזקה שנתית וזמן השבתה, וממוצע נע משוקלל עם אחוז הפחתה. חמש תשובות לשאלה, כמו אצל ניצן",
-          f:function(q){return q.y===1;}}
+          f:function(q){return q.y===1;}},
+  mock:  {name:"📝 מבחן דמה",          hint:"25 שאלות במבנה המבחן, בסדר קבוע: 1–13 של ניצן ו-14–25 של שלמה. ההנחה: <b>ניצן</b> ישאיר את שאלות הבחינה לדוגמה וישנה רק מספרים — שאלות החישוב והפארטו עם נתונים חדשים, והעיוניות כלשונן; <b>שלמה</b> ייקח שאלות מהמאגר וינסח אותן אחרת — שאלה הפוכה, שלילה במילה אחרת («למעט», «פרט ל»), שלילה שהפכה לחיובית, ומקרה מעשי במקום הגדרה. מומלץ: סימולציית מבחן, 45 דקות, עם החוברת והמחשבון. בהסבר של כל שאלה כתוב מה השאלה המקורית, מה השתנה ואיפה היא בחוברת. שאלות המבחן הזה אינן מופיעות בשום היקף אחר",
+          f:function(q){return q.x===1;}}
 };
-function scopeOK(q){ return SCOPE[sel.src] ? SCOPE[sel.src].f(q) : true; }
+/* שאלות מבחן הדמה (x) הן שאלות קיימות בניסוח או במספרים אחרים — רק בהיקף שלהן, לא בכפילות בשאר */
+function inSc(k,q){ return (k==="mock")===!!q.x && SCOPE[k].f(q); }
+function scopeOK(q){ return SCOPE[sel.src] ? inSc(sel.src,q) : !q.x; }
 function filterBank(){return BANK.filter(function(x){return sel.topics.indexOf(x.t)>=0 && scopeOK(x);});}
 /* countAll — בכל המאגר; countScope — בנושאים שנבחרו כרגע (זה המספר שעל הכפתור) */
-function countAll(k){return BANK.filter(function(x){return SCOPE[k].f(x);}).length;}
-function countScope(k){return BANK.filter(function(x){return sel.topics.indexOf(x.t)>=0 && SCOPE[k].f(x);}).length;}
+function countAll(k){return BANK.filter(function(x){return inSc(k,x);}).length;}
+function countScope(k){return BANK.filter(function(x){return sel.topics.indexOf(x.t)>=0 && inSc(k,x);}).length;}
 
 document.getElementById("sub").textContent =
-  BANK.length+" שאלות בפורמט המבחן — "+countAll("calc")+" מהן שאלות חישוב"+
+  BANK.filter(function(x){return !x.x;}).length+" שאלות בפורמט המבחן — "+countAll("calc")+" מהן שאלות חישוב"+
   (countAll("lect")?" ו-"+countAll("lect")+" שאלות לדוגמה של המרצים עצמם":"")+". "+
   "המבחן: 25 שאלות רב-ברירה — 13 של ניצן (כמחציתן חישוב) ו-12 של שלמה. חומר פתוח, 60% מהציון.";
 /* מערבב את סדר התשובות בכל שאלה, כדי שהתשובה הנכונה לא תהיה תמיד באותו מקום */
@@ -271,11 +275,11 @@ function prepQ(q){
   var order=q.o.map(function(_,i){return i;});
   if(!q.fx)shuffle(order);
   var opts=order.map(function(i){return q.o[i];});
-  return {t:q.t,s:q.s,q:q.q,o:opts,c:order.indexOf(q.c),e:q.e,k:q.k,m:q.m,y:q.y};
+  return {t:q.t,s:q.s,q:q.q,o:opts,c:order.indexOf(q.c),e:q.e,k:q.k,m:q.m,y:q.y,x:q.x};
 }
 function buildQuiz(){
   var arr=filterBank().map(prepQ);
-  if(sel.shuffle)shuffle(arr);
+  if(sel.shuffle&&sel.src!=="mock")shuffle(arr);   /* מבחן הדמה בסדר קבוע — כדי שאפשר יהיה לדבר על ״שאלה 7״ */
   return arr;
 }
 function srcBg(s){return (SRC_META[s]||{}).bg||"var(--surface2)";}
@@ -327,7 +331,7 @@ function setup(){
   /* היקף לימוד */
   var row0=E("div",{"class":"toolbar"});
   row0.appendChild(E("span",{"class":"lbl"},"היקף:"));
-  ["all","lect","nexam","style","calc","shlomo","nitsan"].forEach(function(k){
+  ["all","mock","lect","nexam","style","calc","shlomo","nitsan"].forEach(function(k){
     if(!countAll(k))return;
     var b=E("button",{"class":"chip"+(sel.src===k?" active":"")},
       SCOPE[k].name+" <small>"+countScope(k)+"</small>");
@@ -517,7 +521,7 @@ function practiceStart(){
   /* אותה דגימה מאוזנת של המבחן — סבב קצר שמרוכז בשניים-שלושה נושאים
      אינו מייצג, והמאגר אינו מאוזן בין הנושאים. */
   /* שאלות המרצה הן קבוצה קטנה שרוצים לעבור על כולה — בלי דגימה לסבב */
-  if(sel.pcount&&quiz.length>sel.pcount&&["lect","nexam","style"].indexOf(sel.src)<0)
+  if(sel.pcount&&quiz.length>sel.pcount&&["lect","nexam","style","mock"].indexOf(sel.src)<0)
     quiz=shuffle(balancedPick(quiz,sel.pcount));
   pBegin();
 }

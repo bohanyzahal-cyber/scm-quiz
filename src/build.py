@@ -22,7 +22,9 @@ def bank_files():
 
 tpl  = open(os.path.join(HERE, "template.html"), encoding="utf-8").read()
 bank = "\n".join(open(f, encoding="utf-8").read() for f in bank_files())
-html = tpl.replace("/*__BANK__*/", bank)
+# מבחני דמה (mock*.js) — אחרי הבנקים, ומחוץ לספירות שלמטה: הם שאלות קיימות בניסוח או במספרים אחרים
+mocks = "\n".join(open(f, encoding="utf-8").read() for f in sorted(glob.glob(os.path.join(HERE, "mock*.js"))))
+html = tpl.replace("/*__BANK__*/", bank + "\n" + mocks)
 
 def for_course_folder(page):
     """העותק שיושב בתיקיית הקורס נמצא רמה אחת מעל scm-quiz, ושם
