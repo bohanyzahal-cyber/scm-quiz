@@ -52,7 +52,7 @@ bank = json.loads(subprocess.run(["node", "-e", js, os.path.join(ROOT, "src", "b
 # במבחן הנושא לא כתוב ליד השאלה — לכן הנספח ממוין לפי מילה בולטת מתוך השאלה (tools/shq_keywords.py),
 # וכל שאלה מופיעה תחת כמה מילים.
 sys.path.insert(0, HERE)
-from shq_keywords import KW
+from shq_keywords import KW, EXTRA
 SRCTAG = {1: "דף", 2: "הקלטה", 3: "תמלול"}
 rows = []
 for q in bank:
@@ -78,6 +78,12 @@ app = ['<div class="note"><b>איך מחפשים:</b> בוחרים בשאלה ש
        'שלמה: שאלות המבחן נלקחות ממאגר של 76 שאלות, והסדר מעורבב. כאן 38 השאלות שהוצגו או הוקראו בשיעורים. '
        'בסוגריים המקור: <b>דף</b> — מילה במילה מדף השאלות שהציג; <b>הקלטה</b> / <b>תמלול</b> — שוחזרה מהשיעור, והתשובה היא זו שאישר.</div>',
        '<div class="card wide"><h3>לפי א״ב — מילה מתוך השאלה</h3><table class="qa kwt"><tr><th>מילת מפתח</th><th>השאלה</th><th>התשובה הנכונה</th></tr>%s</table></div>' % "".join(trs)]
+xr = sorted(((" · ".join(e[0]), e) for e in EXTRA), key=sortkey)      # רק שש — שורה אחת לכל שאלה
+app.append('<div class="card wide"><h3>שאלות לדוגמה מההרצאות <span class="tag">לא בהכרח מהמאגר</span></h3>'
+           '<div class="note" style="margin-top:0">שלמה הביא אותן באמצע ההרצאות כ«דוגמה לשאלה במבחן» (לפי סיכום הכיתה), והן לא בין 38 השאלות שלמעלה.</div>'
+           '<table class="qa kwt"><tr><th>מילת מפתח</th><th>השאלה</th><th>התשובה</th></tr>%s</table></div>'
+           % "".join('<tr><td class="kw">%s</td><td>%s%s</td><td><b>%s</b></td></tr>'
+                     % (k, e[1], (' <span class="srcs">(%s)</span>' % e[3]) if e[3] else "", e[2]) for k, e in xr))
 secs.append(["shq", "שלמה — שאלות ממאגר המבחן <small>לפי א״ב של מילה מתוך השאלה</small>", "\n".join(app)])
 
 # ---- מספור § לפרקים ולכרטיסים
