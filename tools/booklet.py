@@ -75,12 +75,12 @@ for k, q in rows:
     trs.append('<tr><td class="kw">%s</td><td>%s <span class="srcs">(%s)</span></td><td><b>%s</b></td></tr>' % (k, q["q"], SRCTAG[q["m"]], q["a"]))
 app = ['<div class="note"><b>איך מחפשים:</b> בוחרים בשאלה שבמבחן את המילה הכי ייחודית (מונח, שם, ראשי תיבות) ומדפדפים אליה לפי הא״ב — '
        'עברית ואחריה אנגלית. כל שאלה מופיעה תחת כמה מילים. <b>שימו לב לאינו / הינו</b>: הניסוח במבחן עשוי להתהפך.<br>'
-       'שלמה: שאלות המבחן נלקחות ממאגר של 76 שאלות, והסדר מעורבב. כאן 38 השאלות שהוצגו או הוקראו בשיעורים. '
+       'שלמה: שאלות המבחן נלקחות ממאגר של 76 שאלות, והסדר מעורבב. כאן 39 השאלות שהוצגו או הוקראו בשיעורים. '
        'בסוגריים המקור: <b>דף</b> — מילה במילה מדף השאלות שהציג; <b>הקלטה</b> / <b>תמלול</b> — שוחזרה מהשיעור, והתשובה היא זו שאישר.</div>',
        '<div class="card wide"><h3>לפי א״ב — מילה מתוך השאלה</h3><table class="qa kwt"><tr><th>מילת מפתח</th><th>השאלה</th><th>התשובה הנכונה</th></tr>%s</table></div>' % "".join(trs)]
 xr = sorted(((" · ".join(e[0]), e) for e in EXTRA), key=sortkey)      # רק שש — שורה אחת לכל שאלה
 app.append('<div class="card wide"><h3>שאלות לדוגמה מההרצאות <span class="tag">לא בהכרח מהמאגר</span></h3>'
-           '<div class="note" style="margin-top:0">שלמה הביא אותן באמצע ההרצאות כ«דוגמה לשאלה במבחן» (לפי סיכום הכיתה), והן לא בין 38 השאלות שלמעלה.</div>'
+           '<div class="note" style="margin-top:0">שלמה הביא אותן באמצע ההרצאות כ«דוגמה לשאלה במבחן» (לפי סיכום הכיתה), והן לא בין 39 השאלות שלמעלה.</div>'
            '<table class="qa kwt"><tr><th>מילת מפתח</th><th>השאלה</th><th>התשובה</th></tr>%s</table></div>'
            % "".join('<tr><td class="kw">%s</td><td>%s%s</td><td><b>%s</b></td></tr>'
                      % (k, e[1], (' <span class="srcs">(%s)</span>' % e[3]) if e[3] else "", e[2]) for k, e in xr))
@@ -168,7 +168,7 @@ ul{margin:1mm 0;padding-right:5mm}li{margin:0.4mm 0}
 .k{font-weight:700}
 .qa td:nth-child(2){width:52%}
 .qa .src{width:13mm;text-align:center;font-size:8pt;font-weight:700;white-space:nowrap}
-.kwt td{padding:0.35mm 1.6mm;font-size:8.8pt;line-height:1.3}
+.kwt td{padding:0.25mm 1.6mm;font-size:8.6pt;line-height:1.25}
 .kwt td.kw{width:30mm;font-weight:800}
 .kwt td:nth-child(2){width:50%}
 .kwt tr.lt td{background:#000;color:#fff;font-weight:800;font-size:8.5pt;padding:0 2mm;line-height:1.25}
